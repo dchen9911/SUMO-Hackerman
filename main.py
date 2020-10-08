@@ -86,7 +86,6 @@ if __name__ == '__main__':
                 pass
 
         elif config.camera_mode == config.INTERPRETMODE:
-            
 
             if config.cycle > config.cycle_prev:
                 print('getting prev word')
@@ -118,8 +117,8 @@ if __name__ == '__main__':
         #         cv2.waitKey(1)
         
         if config.process_img:
-            new_img = new_locator.findText(original.copy())
-            cv2.imshow("Capturing", new_img)
+            img = new_locator.findText(original.copy())
+            cv2.imshow("Capturing", img)
             cv2.waitKey(1)
             print("Image being processed")
             config.process_img = False

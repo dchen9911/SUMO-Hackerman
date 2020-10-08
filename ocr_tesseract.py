@@ -30,7 +30,7 @@ def crop_rotated_rect(img, coords_str, debug=False):
     box = np.int0(box)
 
     print("bounding box: {}".format(box))
-    cv2.drawContours(img, [box], 0, (0, 0, 255), 2)
+    # cv2.drawContours(img, [box], 0, (0, 0, 255), 2)
 
     # get width and height of the detected rectangle
     width = int(rect[1][0])
@@ -132,7 +132,6 @@ class TextRecogniser:
 
             # This will recognize the text from flattened bounding box
             text = pytesseract.image_to_string(flat_rect, config=self.configuration)
-            
 
             print("{}".format(text.strip()))        
 
