@@ -143,7 +143,7 @@ def dpleft_cb(channel):
         config.image_edited = True
 
     else:
-        config.camera_mode = VIEWFINDERMODE
+        config.camera_mode = VIEW_FINDERMODE
     print(GPIO.input(channel))
 
 # DP Up callback
