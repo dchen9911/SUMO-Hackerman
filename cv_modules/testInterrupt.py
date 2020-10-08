@@ -181,6 +181,7 @@ def dpright_cb(channel):
                 config.img_fast_f = True
             else:
                 config.process_img = True
+                config.img_fast_f = False
     elif config.camera_mode == config.INTERPRETMODE:
         # trigger next next
         pass
