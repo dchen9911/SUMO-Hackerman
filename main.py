@@ -6,6 +6,7 @@ from cv_modules.testInterrupt import ZOOM_MODE, BRIGHTNESS_MODE, CONTRAST_MODE
 from cv_modules.zoom import zoom
 from cv_modules.roi import click_and_crop_cb, checkROI, crop
 import config
+import time
 
 from picamera.array import PiRGBArray
 from picamera import PiCamera
@@ -14,7 +15,6 @@ camera = PiCamera()
 rawCapture = PiRGBArray(camera)
 camera.resolution = (2592, 1944)
 # camera.framerate = 10
-rawCapture = PiRGBArray(camera)
 
 
 
@@ -40,7 +40,7 @@ if __name__ == '__main__':
 
     new_locator = TextLocator() 
 
-    webcam = cv2.VideoCapture(0) 
+    # webcam = cv2.VideoCapture(0) 
     img_held_f = False
     config.img_fast_f = False
     img = None          # process
@@ -59,15 +59,20 @@ if __name__ == '__main__':
             config.level_brightness = 0
 
             # grab capture from camera
+            rawCapture = PiRGBArray(camera)
+            time.sleep(0.1)
+
             camera.capture(rawCapture, format="bgr")
             frame = rawCapture.array
            
-            # dispaly it for 1 ms
-            cv2.waitKey(50)
+            
             # viewfinder mode
             # print(check) #prints true as long as the webcam is running
             # print(frame) #prints matrix values of each framecd 
             cv2.imshow("Capturing", frame)
+            # dispaly it for 1 ms
+            cv2.waitKey(10)
+            
             img_held_f = False
         elif config.camera_mode == config.EDITMODE:
             if img_held_f == False:
