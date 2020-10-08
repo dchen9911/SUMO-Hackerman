@@ -178,6 +178,7 @@ def dpright_cb(channel):
             print("img fast f mode", config.img_fast_f)
             if config.img_fast_f == False:
                 config.img_fast_f = True
+                config.image_edited = True
             else:
                 config.process_img = True
                 config.img_fast_f = False
