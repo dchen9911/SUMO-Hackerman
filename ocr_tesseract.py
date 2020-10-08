@@ -140,7 +140,7 @@ class TextRecogniser:
             img_strings.append(text_to_add)
             # print(coords)
             cv2.putText(im_to_disp, text_to_add, (coords[0][0][0], coords[0][0][1] - 10),
-                cv2.FONT_HERSHEY_SIMPLEX, 1,(0,0, 255), 5)
+                cv2.FONT_HERSHEY_SIMPLEX, 1,(0,0, 255), 2)
         
         return im_to_disp, cropped_rects, img_strings
         # im_to_disp = cv2.cvtColor(im_to_disp, cv2.COLOR_BGR2RGB)
