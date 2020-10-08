@@ -15,8 +15,6 @@ camera = PiCamera()
 camera.resolution = (2592, 1952)
 # camera.framerate = 10
 
-
-
 def update_image(img):
     # CHANGE FUNCTION TO DNAIELS
     img = zoom(config.level_horz, config.level_vert, config.level_zoom, img)
@@ -39,7 +37,7 @@ if __name__ == '__main__':
 
     new_locator = TextLocator() 
 
-    # webcam = cv2.VideoCapture(0) 
+    webcam = cv2.VideoCapture(0) 
     img_held_f = False
     config.img_fast_f = False
     img = None          # process
@@ -57,12 +55,7 @@ if __name__ == '__main__':
             config.level_contrast = 0
             config.level_brightness = 0
 
-            # grab capture from camera
-            rawCapture = PiRGBArray(camera)
-            time.sleep(0.05)
-
-            camera.capture(rawCapture, format="bgr")
-            frame = cv2.cvtColor(rawCapture.array, cv2.COLOR_BGR2RGB) 
+            check, frame = webcam.read()
             
             # viewfinder mode
             # print(check) #prints true as long as the webcam is running
@@ -74,7 +67,12 @@ if __name__ == '__main__':
             img_held_f = False
         elif config.camera_mode == config.EDITMODE:
             if img_held_f == False:
+                # grab capture from camera
+                rawCapture = PiRGBArray(camera)
+                time.sleep(0.1)
 
+                camera.capture(rawCapture, format="bgr")
+                frame = cv2.cvtColor(rawCapture.array, cv2.COLOR_BGR2RGB) 
                 img = frame
                 original = frame.copy()
                 print("holding image")
