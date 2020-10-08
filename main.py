@@ -133,10 +133,11 @@ if __name__ == '__main__':
         #         cv2.waitKey(1)
         
         if config.process_img:
+            print("Image being processed")
             img = new_locator.findText(original.copy())
             cv2.imshow("Capturing", img)
             cv2.waitKey(1)
-            print("Image being processed")
+            print("Image finished processing")
             config.process_img = False
             config.camera_mode = config.INTERPRETMODE
             print('switch to interpret mode')
