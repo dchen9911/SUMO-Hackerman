@@ -372,13 +372,17 @@ if __name__ == '__main__':
 
     im2 = textloc.fastLocateText(im.copy(), min_length=1500)
     cv2.imshow('image', im2)
+    print("Showing shaded img")
     cv2.waitKey(0)
-
+    
     im = textloc.findText(im)
     cv2.imshow('image', im)
+    print("Showing processed img")
+
     cv2.waitKey(0)
 
     cv2.imshow('image',textloc.get_next_word())
+    print("Showing processed img")
     cv2.waitKey(0)
 
     cv2.imshow('image',textloc.get_next_word())
