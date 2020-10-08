@@ -133,6 +133,63 @@ class TextLocator:
 
 
         self.ocr_tool = TextRecogniser()
+
+    # quickly locates areas in an image where there could be text
+    # expects raw image in bgr and outputs raw image in bgr
+    def fastLocateText(self, im, min_length=800):
+        im = im[:, :, ::-1] # convert to rgb to stick it into the network
+
+        start_time = time.time()
+        print('starting')
+        im_resized, (ratio_h, ratio_w) = resize_image(im, min_length)
+
+        timer = {'net': 0, 'restore': 0, 'nms': 0}
+        start = time.time()
+        score, geometry = self.sess.run([self.f_score, self.f_geometry], feed_dict={self.input_images: [im_resized]})
+        timer['net'] = time.time() - start
+
+        boxes, timer = detect(score_map=score, geo_map=geometry, timer=timer)
+        print('net {:.0f}ms, restore {:.0f}ms, nms {:.0f}ms'.format(
+            timer['net']*1000, timer['restore']*1000, timer['nms']*1000))
+
+        if boxes is not None:
+            boxes = boxes[:, :8].reshape((-1, 4, 2))
+            boxes[:, :, 0] /= ratio_w
+            boxes[:, :, 1] /= ratio_h
+
+        duration = time.time() - start_time
+        print('[timing] {}'.format(duration))
+
+        coords_strs = []
+
+        # convert to bgr so we can make the overlay
+        overlay = im[:, :, ::-1].copy()
+
+        # if there are boxes, draw them onto the image
+        if boxes is not None:
+            for box in boxes:
+                # to avoid submitting errors
+                box = sort_poly(box.astype(np.int32))
+                if np.linalg.norm(box[0] - box[1]) < 5 or np.linalg.norm(box[3]-box[0]) < 5:
+                    continue
+                coords_str = '{},{},{},{},{},{},{},{}\r\n'.format(
+                    box[0, 0], box[0, 1], box[1, 0], box[1, 1], box[2, 0], box[2, 1], box[3, 0], box[3, 1],
+                )
+                coords_strs.append(coords_str)
+                
+                cv2.fillPoly(overlay, [box.astype(np.int32).reshape((-1, 1, 2))], (255, 255, 0), 8)
+            
+            im = im[:, :, ::-1] # convert to bgr so we can add with overlay
+            alpha = 0.5
+            cv2.addWeighted(overlay, alpha, im, 1 - alpha, 0, im)
+
+            im = cv2.cvtColor(im, cv2.COLOR_BGR2RGB) 
+            plt.imshow(im)
+            plt.show()
+
+        # im = cv2.cvtColor(im, cv2.COLOR_BGR2RGB) 
+       
+        return im
     
     # takes in the raw image data
     # returns the annotated image
@@ -255,5 +312,7 @@ def main(argv=None):
 
 if __name__ == '__main__':
     textloc = TextLocator()
-    im = cv2.imread('test_images/IMG_20201008_113548.jpg')
-    textloc.findText(im)
+    im = cv2.imread('test_images/IMG_20201008_113706.jpg')
+    textloc.fastLocateText(im)
+    im = cv2.imread('test_images/IMG_20201008_113718.jpg')
+    textloc.fastLocateText(im)
