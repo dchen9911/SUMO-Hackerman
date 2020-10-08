@@ -99,11 +99,10 @@ def mode_cb(channel):
     if config.mode_flag == ZOOM_MODE:
         config.mode_flag == CONTRAST_MODE
         print("Switched to contrast mode")
-    if config.mode_flag == CONTRAST_MODE:
+    elif config.mode_flag == CONTRAST_MODE:
         config.mode_flag== BRIGHTNESS_MODE
         print("Switched to brightness mode")
-
-    if config.mode_flag == BRIGHTNESS_MODE:
+    elif config.mode_flag == BRIGHTNESS_MODE:
         config.mode_flag == ZOOM_MODE
         print("Switched to zoom mode")
 
