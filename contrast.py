@@ -10,7 +10,7 @@ from scipy.ndimage import zoom
 import argparse
 
 
-pytesseract.pytesseract.tesseract_cmd = r'C:\\Program Files\\Tesseract-OCR\\tesseract.exe'
+# pytesseract.pytesseract.tesseract_cmd = r'C:\\Program Files\\Tesseract-OCR\\tesseract.exe'
 
 def changeContrastBrightness(img, level_contrast, level_brightness):
     # Contrast

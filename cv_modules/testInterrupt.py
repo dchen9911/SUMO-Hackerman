@@ -48,8 +48,6 @@ def setup_GPIO():
     GPIO.setup(BUTCAMERA, GPIO.IN, pull_up_down=GPIO.PUD_DOWN)
     GPIO.setup(BUTMODE, GPIO.IN, pull_up_down=GPIO.PUD_DOWN)
 
-
-
   
 def enable_int():
     # camera
