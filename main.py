@@ -63,7 +63,7 @@ if __name__ == '__main__':
                 img = frame
                 original = frame.copy()
                 print("holding image")
-
+                print(frame.shape)
                 img_held_f = True
             
             if config.image_edited:
