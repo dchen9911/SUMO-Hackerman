@@ -85,13 +85,17 @@ if __name__ == '__main__':
             
 
             if config.cycle > config.cycle_prev:
-                # img = getNext(img.copy())
+                print('getting prev word')
+                img = new_locator.get_next_word()
                 print(config.cycle, config.cycle_prev)
                 config.cycle_prev = config.cycle
-            elif config.cycle < config.cycle_prev:                
-                # img = getPrev(img.copy())
+            elif config.cycle < config.cycle_prev:     
+                print('getting next word')           
+                img = new_locator.get_prev_word()
                 print(config.cycle, config.cycle_prev)
                 config.cycle_prev = config.cycle
+            cv2.imshow("Capturing", img)
+            cv2.waitKey(1)
 
         # # can only do roi in the edit mode        
         # if config.camera_mode == config.EDITMODE:
