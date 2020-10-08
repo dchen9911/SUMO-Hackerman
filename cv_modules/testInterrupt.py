@@ -12,10 +12,10 @@ BUTCAMERA = 1
 BUTMODE = 2
 BUTLED1 = 3
 BUTLED2 = 4
-BUTDPUP = 5
-BUTDPDOWN = 6
-BUTDPLEFT = 7
-BUTDPRIGHT = 8
+BUTDPUP = 17
+BUTDPDOWN = 27
+BUTDPLEFT = 22
+BUTDPRIGHT = 10
 BUTTOGGLE = 9
 
 # Inputs
@@ -36,6 +36,15 @@ pan_right = 0
 
 # time.sleep(0.1)
 
+def setup_GPIO():
+    GPIO.setmode(GPIO.BCM)     # set up BCM GPIO numbering  
+    GPIO.setup(BUTDPUP, GPIO.IN, pull_up_down=GPIO.PUD_DOWN)     
+    GPIO.setup(BUTDPDOWN, GPIO.IN, pull_up_down=GPIO.PUD_DOWN)     
+    GPIO.setup(BUTDPLEFT, GPIO.IN, pull_up_down=GPIO.PUD_DOWN)     
+    GPIO.setup(BUTDPRIGHT, GPIO.IN, pull_up_down=GPIO.PUD_DOWN)     
+    GPIO.setup(BUTTOGGLE, GPIO.IN, pull_up_down=GPIO.PUD_DOWN)     
+
+  
 def enable_int():
     # camera
     GPIO.add_event_detect(BUTCAMERA, GPIO.FALLING, callback=camera_cb, bouncetime=200)
@@ -57,7 +66,6 @@ def enable_int():
 
     # toggle
     GPIO.add_event_detect(BUTTOGGLE, GPIO.FALLING, callback=toggle_cb, bouncetime=200)
-
 
     GPIO.add_event_detect(BUTTON, GPIO.BOTH, callback=button_cb, bouncetime=200)
 
