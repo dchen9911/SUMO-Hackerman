@@ -116,67 +116,73 @@ def mode_cb(channel):
 # DP Up callback
 def dpup_cb(channel):
     print("DPAD UP: Rising edge detected")
-
-    if config.mode_flag == PAN_MODE:
-        config.level_vert += 10
-    if config.mode_flag == ZOOM_MODE:
-        config.level_zoom += 10
-    elif config.mode_flag == CONTRAST_MODE:
-        config.level_contrast += 10
-    elif config.mode_flag == BRIGHTNESS_MODE:
-        config.level_brightness += 10
-    config.image_edited = True
-
     print(GPIO.input(channel))
+
+    if config.camera_mode == config.EDITMODE:
+        if config.mode_flag == PAN_MODE:
+            config.level_vert += 10
+        if config.mode_flag == ZOOM_MODE:
+            config.level_zoom += 10
+        elif config.mode_flag == CONTRAST_MODE:
+            config.level_contrast += 10
+        elif config.mode_flag == BRIGHTNESS_MODE:
+            config.level_brightness += 10
+        config.image_edited = True
+
 
 # DP Down callback
 def dpdown_cb(channel):
     print("DPAD Down: Rising edge detected")
-    if config.mode_flag == PAN_MODE:
-        config.level_vert -= 10
-    elif config.mode_flag == ZOOM_MODE:
-        config.level_zoom -= 10
-    elif config.mode_flag == CONTRAST_MODE:
-        config.level_contrast -= 10
-    elif config.mode_flag == BRIGHTNESS_MODE:
-        config.level_brightness -= 10
-
-    config.image_edited = True
     print(GPIO.input(channel))
+    if config.camera_mode == config.EDITMODE:
+        if config.mode_flag == PAN_MODE:
+            config.level_vert -= 10
+        elif config.mode_flag == ZOOM_MODE:
+            config.level_zoom -= 10
+        elif config.mode_flag == CONTRAST_MODE:
+            config.level_contrast -= 10
+        elif config.mode_flag == BRIGHTNESS_MODE:
+            config.level_brightness -= 10
+
+        config.image_edited = True
+    
 
 # DP Left callback
 def dpleft_cb(channel):
     print("DPAD Left: Rising edge detected")
-    if config.mode_flag == PAN_MODE:
-        config.level_horz -= 10
-        config.image_edited = True
-
-    else:
-        config.camera_mode = config.VIEWFINDERMODE
     print(GPIO.input(channel))
+    if config.camera_mode == config.EDITMODE:
+        if config.mode_flag == PAN_MODE:
+            config.level_horz -= 10
+            config.image_edited = True
+
+        else:
+            config.camera_mode = config.VIEWFINDERMODE
+        
 
 # DP Up callback
 def dpright_cb(channel):
     print("DPAD Right: Rising edge detected")
-    if config.mode_flag == PAN_MODE:
-        config.level_horz += 10
-        config.image_edited = True
-    elif config.camera_mode == config.EDITMODE:
-        config.process_img = True
     print(GPIO.input(channel))
+
+    if config.camera_mode == config.EDITMODE:
+        if config.mode_flag == PAN_MODE:
+            config.level_horz += 10
+            config.image_edited = True
+        elif config.camera_mode == config.EDITMODE:
+            config.process_img = True
 
 # Toggle callback
 def toggle_cb(channel):
     print("TOGGLE: Rising edge detected")
     print(GPIO.input(channel))  
 
-    if config.camera_mode == config.VIEWFINDERMODE:
-        return
-    if config.mode_flag != PAN_MODE:
-        config.prev_mode = config.mode_flag
-        config.mode_flag = PAN_MODE
-    else:
-        config.mode_flag = config.prev_mode
+    if config.camera_mode == config.EDITMODE:
+        if config.mode_flag != PAN_MODE:
+            config.prev_mode = config.mode_flag
+            config.mode_flag = PAN_MODE
+        else:
+            config.mode_flag = config.prev_mode
 
            
 
