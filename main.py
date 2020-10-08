@@ -25,7 +25,8 @@ if __name__ == '__main__':
 
     ti.enable_int()
     # TODO: uncomment
-    # new_locator = TextLocator()    
+    # new_locator = TextLocator() 
+    #    
     webcam = cv2.VideoCapture(0) 
     img_held_f = False
     config.img_fast_f = False
@@ -42,9 +43,8 @@ if __name__ == '__main__':
             config.level_contrast = 0
             config.level_brightness = 0
 
-            # TODO: uncomment
             check, frame = webcam.read()
-
+            print("read a frame")
             # viewfinder mode
             # print(check) #prints true as long as the webcam is running
             # print(frame) #prints matrix values of each framecd 
