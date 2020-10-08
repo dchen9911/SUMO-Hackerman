@@ -5,13 +5,9 @@ import matplotlib.pyplot as plt
 import pytesseract
 from scipy.ndimage import interpolation as inter
 
-<<<<<<< HEAD
 import shutil
 import os
 import glob
-=======
-pytesseract.pytesseract.tesseract_cmd = r'C:\\Program Files\\Tesseract-OCR\\tesseract.exe'
->>>>>>> ee1defd88f0cea3c5b0b294feadca1bd7785f98a
 
 # img contains the image data
 # coords_str is a string of 8 comma separated coordinates, 4 * (x,y) coordinates)
@@ -52,22 +48,22 @@ def crop_rotated_rect(img, coords_str, debug=False):
     M = cv2.getPerspectiveTransform(src_pts, dst_pts)
 
     # directly warp the rotated rectangle to get the straightened rectangle
-    warped = cv2.warpPerspective(img, M, (width, height))
+    flat_rect = cv2.warpPerspective(img, M, (width, height))
     if debug:
-        cv2.imshow('image', warped)
+        cv2.imshow('image', flat_rect)
         cv2.waitKey(0)
 
-    im_h, im_w , _ = warped.shape
+    im_h, im_w , _ = flat_rect.shape
     print("Width {}, height: {}".format(im_w, im_h))
     # this means text is vertical
     if im_h > 2*im_w:
         # rotated by 90 deg
-        warped = warped.swapaxes(0,1)[::-1,:,:]
+        flat_rect = flat_rect.swapaxes(0,1)[::-1,:,:]
         if debug:
-            cv2.imshow('image', warped)
+            cv2.imshow('image', flat_rect)
             cv2.waitKey(0)
 
-    return coords, warped
+    return coords, flat_rect
 
 # make the image black and white, get rid of noise text thick
 def process_for_OCR(imgf, debug=False):
@@ -113,36 +109,40 @@ def process_for_OCR(imgf, debug=False):
     # cv2.imshow('image', imgf)
     # cv2.waitKey(0)
 
-
-
     return imgf
 
-# boosts contrast, expects bgr image
-def boost_contrast(img):
-    #-----Converting image to LAB Color model----------------------------------- 
-    lab= cv2.cvtColor(img, cv2.COLOR_BGR2LAB)
+class TextRecogniser:
+    def __init__(self):
+        #configuration setting to convert image to string.  
+        self.configuration = ("-l eng --oem 1 --psm 8")
 
-    #-----Splitting the LAB image to different channels-------------------------
-    l, a, b = cv2.split(lab)
+    def recogniseText(self, orig_im, im_to_disp, coords_strs):
 
-    #-----Applying CLAHE to L-channel-------------------------------------------
-    clahe = cv2.createCLAHE(clipLimit=3.5, tileGridSize=(8,8))
-    cl = clahe.apply(l)
+        for line in coords_strs:
+            coords_str = line.strip()
 
-    #-----Merge the CLAHE enhanced L-channel with the a and b channel-----------
-    limg = cv2.merge((cl,a,b))
+            coords, flat_rect = crop_rotated_rect(orig_im, coords_str)
+            flat_rect = process_for_OCR(flat_rect, debug=False)
 
-    #-----Converting image from LAB Color model to RGB model--------------------
-    final = cv2.cvtColor(limg, cv2.COLOR_LAB2BGR)
-    return final
+            # convert from bgr to rgb
+            flat_rect = cv2.cvtColor(flat_rect, cv2.COLOR_BGR2RGB)
+
+            # This will recognize the text from flattened bounding box
+            text = pytesseract.image_to_string(flat_rect, config=self.configuration)
+            print("{}".format(text))        
+
+            # only add text if the character is english
+            text_to_add = "".join([x if ord(x) < 128 else "" for x in text]).strip()
+            # print(coords)
+            cv2.putText(im_to_disp, text_to_add, (coords[0][0][0], coords[0][0][1] - 10),
+                cv2.FONT_HERSHEY_SIMPLEX, 2,(0,0, 255), 5)
+        return im_to_disp
+        # im_to_disp = cv2.cvtColor(im_to_disp, cv2.COLOR_BGR2RGB)
+        # plt.imshow(im_to_disp)
+        # plt.show()
 
 
-    # pass
-    # return processed_img
-
-
-if __name__ == "__main__":
-
+def main():
     in_folder = 'test_images/'
     out_folder = 'output_ims/'
     if not os.path.exists(out_folder):
@@ -202,3 +202,6 @@ if __name__ == "__main__":
         # plt.imshow(img_to_disp)
         # plt.show()
         f_out.close()
+
+if __name__ == "__main__":
+    pass
