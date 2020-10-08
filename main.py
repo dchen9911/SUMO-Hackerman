@@ -45,6 +45,7 @@ if __name__ == '__main__':
     img = None          # process
     original = None
 
+    fast_img_disped = False
 
     print("initialised in view finger")
     while True:
@@ -85,10 +86,11 @@ if __name__ == '__main__':
             if config.image_edited:
                 # update all things
                 print("Updating the image)")
-                if config.img_fast_f == True:
+                if config.img_fast_f == True and fast_img_disped == False:
                     print("show fast img")
                     img = new_locator.fastLocateText(original.copy())
                     img = update_image(img)
+                    fast_img_disped = True
                 else:
                     img = update_image(original.copy())
                 
@@ -137,6 +139,7 @@ if __name__ == '__main__':
             img = new_locator.findText(original.copy())
             cv2.imshow("Capturing", img)
             cv2.waitKey(1)
+            fast_img_disped = False
             print("Image finished processing")
             config.process_img = False
             config.camera_mode = config.INTERPRETMODE
