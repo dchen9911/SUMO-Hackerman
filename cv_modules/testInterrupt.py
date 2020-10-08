@@ -177,7 +177,9 @@ def dpright_cb(channel):
             config.image_edited = True
         elif config.camera_mode == config.EDITMODE:
             print("img fast f mode", config.img_fast_f)
-            if config.img_fast_f:
+            if config.img_fast_f == False:
+                config.img_fast_f = True
+            else:
                 config.process_img = True
     elif config.camera_mode == config.INTERPRETMODE:
         # trigger next next
