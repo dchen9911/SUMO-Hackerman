@@ -30,6 +30,7 @@ if __name__ == '__main__':
     img_held_f = False
     img = None          # process
     original = None
+    print("initialised in view finger")
     while True:
 
         if config.camera_mode == config.VIEWFINDERMODE:
@@ -41,7 +42,6 @@ if __name__ == '__main__':
             # print(frame) #prints matrix values of each framecd 
             # cv2.imshow("Capturing", frame)
             img_held_f = False
-            print("in viewfinder mode")
        
         elif camera_mode == config.EDITMODE:
             if img_held_f == False:
