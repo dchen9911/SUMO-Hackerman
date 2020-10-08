@@ -136,7 +136,7 @@ def dpleft_cb(channel):
         config.level_horz -= 10
         config.image_edited = True
 
-    else
+    else:
         config.camera_mode = VIEWFINDERMODE
     print(GPIO.input(channel))
 
