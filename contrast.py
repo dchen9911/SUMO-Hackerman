@@ -41,7 +41,7 @@ class image_modifier():
 
     def change_contrast(self, level):
         # 
-        factor = (255 * (level+255)) / (255 * (255-level))
+        factor = (255 * (level+101)) / (255 * (101-level))
         def contrast(c):
             return 128 + factor * (c - 128)
         self.img = self.original_img.point(contrast)
@@ -53,6 +53,11 @@ class image_modifier():
         plt.imshow(self.img)
         plt.title('Output')
         plt.show()
+
+    def change_brightness(self, level):
+        factor = (255 * (level+101)) / (255 * (101-level))
+        enhancer = ImageEnhance.Brightness(self.original_img)
+        self.img = enhancer.enhance(factor)
 
     def change_zoom(self, level, **kwargs):
         # convert pil image to np image
@@ -201,9 +206,20 @@ if __name__ == "__main__":
     # imgHandler.boost_contrast(6)
     # imgHandler.display_image()
 
+    imgHandler.change_brightness(99)
+    imgHandler.display_image()
+
     # cannot have number >=255 and <-255 is pure grey
     while True:
-        text = int(input("Contrast Number: "))
+        text = input("Contrast Number between : ")
+        # if text.is_integer():
+        #     print("Error, must be a number between -100 and 100")
+        #     continue
+        text = int(text)
+        if text > 100:
+            text = int(input("Error, number needs to be between -100 and 100: "))
+        if text < -100:
+            text = int(input("Error, number needs to be between -100 and 100: "))
         if text == 0:
             break
 
