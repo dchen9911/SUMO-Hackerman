@@ -98,10 +98,15 @@ def mode_cb(channel):
     
     if config.mode_flag == ZOOM_MODE:
         config.mode_flag == CONTRAST_MODE
+        print("Switched to contrast mode")
     if config.mode_flag == CONTRAST_MODE:
         config.mode_flag== BRIGHTNESS_MODE
+        print("Switched to brightness mode")
+
     if config.mode_flag == BRIGHTNESS_MODE:
         config.mode_flag == ZOOM_MODE
+        print("Switched to zoom mode")
+
     print(GPIO.input(channel))
 
 # DP Up callback
@@ -160,7 +165,7 @@ def dpright_cb(channel):
 def toggle_cb(channel):
     print("TOGGLE: Rising edge detected")
     print(GPIO.input(channel))  
-    
+
     if config.camera_mode == config.VIEWFINDERMODE:
         return
     if config.mode_flag != PAN_MODE:
