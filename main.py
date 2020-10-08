@@ -10,8 +10,6 @@ from cv_modules.roi import click_and_crop_cb, checkROI, crop
 import config
 # from eval import TextLocator
 
-# img2 = textlocator.findtext(img)
-
 
 def update_image(img):
     # CHANGE FUNCTION TO DNAIELS
@@ -29,9 +27,8 @@ if __name__ == '__main__':
     ti.enable_int()
     # cv2.setMouseCallback("Capturing", click_and_crop_cb)
 
-    # TODO: uncomment
-    # new_locator = TextLocator() 
-    #    
+    new_locator = TextLocator() 
+
     webcam = cv2.VideoCapture(0) 
     img_held_f = False
     config.img_fast_f = False
@@ -71,11 +68,14 @@ if __name__ == '__main__':
             if config.image_edited:
                 # update all things
                 print("Updating the image)")
-                img = update_image(original.copy())
-                
                 if config.img_fast_f == True:
                     print("show fast img")
-                    # fast_img = new_locator.fastLocateText(img.copy())
+                    img = new_locator.fastLocateText(original.copy())
+                    img = update_image(img)
+                else:
+                    img = update_image(original.copy())
+                
+                
                 print('brigtness: ' + str(config.level_brightness)) 
                 print('contrast: ' + str(config.level_contrast))
                 print('level_horz: ' +str( config.level_horz))
