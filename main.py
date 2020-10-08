@@ -26,8 +26,9 @@ if __name__ == '__main__':
     ti.enable_int()
     # TODO: uncomment
     # new_locator = TextLocator()    
-    # webcam = cv2.VideoCapture(0) 
+    webcam = cv2.VideoCapture(0) 
     img_held_f = False
+    config.img_fast_f = False
     img = None          # process
     original = None
     print("initialised in view finger")
@@ -42,12 +43,12 @@ if __name__ == '__main__':
             config.level_brightness = 0
 
             # TODO: uncomment
-            # check, frame = webcam.read()
+            check, frame = webcam.read()
 
             # viewfinder mode
             # print(check) #prints true as long as the webcam is running
             # print(frame) #prints matrix values of each framecd 
-            # cv2.imshow("Capturing", frame)
+            cv2.imshow("Capturing", frame)
             img_held_f = False
        
         elif config.camera_mode == config.EDITMODE:
@@ -55,15 +56,20 @@ if __name__ == '__main__':
                 # TODO: uncomment
                 # check, frame = webcam.read()
 
-                # img = frame
-                # original = frame.copy()
+                img = frame
+                original = frame.copy()
                 print("holding image")
+
                 img_held_f = True
             
             if config.image_edited:
                 # TODO: Uncomment and comment prints
                 # update alles
                 # img = update_image(original)
+                
+                if config.img_fast_f == True:
+                    print("show fast img")
+                    # fast_img = new_locator.fastLocateText(img.copy())
                 print('brigtness: ' + str(config.level_brightness)) 
                 print('contrast: ' + str(config.level_contrast))
                 print('level_horz: ' +str( config.level_horz))
@@ -71,6 +77,20 @@ if __name__ == '__main__':
                 print('level_zoom: ' +str( config.level_zoom))
                 config.image_edited = False
                 pass
+
+        elif config.camera_mode == config.INTERPRETMODE:
+            print('switch to interpret mode')
+
+            if config.cycle > config.cycle_prev:
+                # img = getNext(img.copy())
+                print(config.cycle, config.cycle_prev)
+                config.cycle_prev = config.cycle
+            elif config.cycle < config.cycle_prev:                
+                # img = getPrev(img.copy())
+                print(config.cycle, config.cycle_prev)
+
+            # pass
+
         
         if config.process_img:
             # TODO: UNCOMMENT
@@ -78,6 +98,7 @@ if __name__ == '__main__':
             # cv2.imshow("Capturing", new_img)
             print("Image being processed")
             config.process_img = False
+            config.camera_mode = config.INTERPRETMODE
             
 
        

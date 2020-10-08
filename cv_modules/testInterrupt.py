@@ -159,6 +159,11 @@ def dpleft_cb(channel):
         else:
             config.camera_mode = config.VIEWFINDERMODE
             print("switch back to viewfinder")
+    elif config.camera_mode == config.INTERPRETMODE:
+        print
+        config.cycle -= 1
+        # trigger next next
+        pass
         
 
 # DP Up callback
@@ -166,12 +171,24 @@ def dpright_cb(channel):
     print("DPAD Right: Rising edge detected")
     print(GPIO.input(channel))
 
+
+
     if config.camera_mode == config.EDITMODE:
         if config.mode_flag == PAN_MODE:
             config.level_horz += 10
             config.image_edited = True
         elif config.camera_mode == config.EDITMODE:
-            config.process_img = True
+            print("img fast f mode", config.img_fast_f)
+            if config.img_fast_f == False:
+                config.img_fast_f = True
+            else:
+                config.process_img = True
+                config.img_fast_f = False
+    elif config.camera_mode == config.INTERPRETMODE:
+        print
+        config.cycle += 1
+        # trigger next next
+        pass
 
 # Toggle callback
 def toggle_cb(channel):
