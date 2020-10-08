@@ -15,6 +15,8 @@ import config
 
 
 def click_and_crop_cb(event, x, y, flags, params):
+    if config.camera_mode != config.EDITMODE:
+        return
     print("IN")
 
     if event == cv2.EVENT_LBUTTONDOWN:
