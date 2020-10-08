@@ -26,7 +26,7 @@ def changeContrastBrightness(img, level_contrast, level_brightness):
     img = enhancer.enhance(factor_brightness)
 
     # 
-    return numpy.array(img)
+    return np.array(img)
 
 def display_image(img):
     # cv2.imshow('image', self.img)
