@@ -370,7 +370,7 @@ if __name__ == '__main__':
     textloc = TextLocator()
     im = cv2.imread('test_images/IMG_20201008_113806.jpg')
 
-    im2 = textloc.fastLocateText(im.copy(), min_length=1500)
+    im2 = textloc.fastLocateText(im.copy(), min_length=2000)
     cv2.imshow('image', im2)
     print("Showing shaded img")
     cv2.waitKey(0)

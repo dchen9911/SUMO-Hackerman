@@ -12,7 +12,7 @@ from picamera.array import PiRGBArray
 from picamera import PiCamera
 
 camera = PiCamera()
-camera.resolution = (1920, 1080)
+camera.resolution = (1920, 1440)
 # camera.framerate = 10
 
 
