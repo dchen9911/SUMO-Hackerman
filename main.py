@@ -12,7 +12,7 @@ from picamera.array import PiRGBArray
 from picamera import PiCamera
 
 camera = PiCamera()
-camera.resolution = (2592, 1944)
+camera.resolution = (640, 480)
 # camera.framerate = 10
 
 def update_image(img):
@@ -68,6 +68,8 @@ if __name__ == '__main__':
         elif config.camera_mode == config.EDITMODE:
             if img_held_f == False:
                 # grab capture from camera
+                camera.resolution = (2592, 1944)
+
                 rawCapture = PiRGBArray(camera)
                 time.sleep(0.1)
 
@@ -78,6 +80,8 @@ if __name__ == '__main__':
                 print("holding image")
                 print(frame.shape)
                 img_held_f = True
+                camera.resolution = (640, 480)
+
             
             if config.image_edited:
                 # update all things
