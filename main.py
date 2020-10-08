@@ -13,6 +13,10 @@ from picamera import PiCamera
 
 camera = PiCamera()
 camera.resolution = (640, 480)
+
+camera2 = PiCamera()
+camera2.resolution= (640, 480)
+
 # camera.framerate = 10
 
 def update_image(img):
@@ -37,7 +41,7 @@ if __name__ == '__main__':
 
     new_locator = TextLocator() 
 
-    webcam = cv2.VideoCapture(0) 
+    # webcam = cv2.VideoCapture(0) 
     img_held_f = False
     config.img_fast_f = False
     img = None          # process
@@ -55,8 +59,10 @@ if __name__ == '__main__':
             config.level_contrast = 0
             config.level_brightness = 0
 
-            check, frame = webcam.read()
-            
+            rawCapture = PiRGBArray(camera2)
+            time.sleep(0.01)
+            camera2.capture(rawCapture, format="bgr")
+            frame = cv2.cvtColor(rawCapture.array, cv2.COLOR_BGR2RGB)             
             # viewfinder mode
             # print(check) #prints true as long as the webcam is running
             # print(frame) #prints matrix values of each framecd 
@@ -67,8 +73,6 @@ if __name__ == '__main__':
             img_held_f = False
         elif config.camera_mode == config.EDITMODE:
             if img_held_f == False:
-                # grab capture from camera
-                camera.resolution = (2592, 1944)
 
                 rawCapture = PiRGBArray(camera)
                 time.sleep(0.1)
@@ -80,7 +84,6 @@ if __name__ == '__main__':
                 print("holding image")
                 print(frame.shape)
                 img_held_f = True
-                camera.resolution = (640, 480)
 
             
             if config.image_edited:
