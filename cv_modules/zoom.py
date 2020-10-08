@@ -76,7 +76,7 @@ def zoom(horz, vert, zoom, img):
     zoomedImg = cv2.resize(croppedImg, (dims[1], dims[0]), interpolation=cv2.INTER_AREA)
 
     return zoomedImg
-
-zoomed = zoom(95, 95, 110, img)
-cv2.imshow('Zoomed', zoomed)
-cv2.waitKey(0)
+if __name__ == "__main__":
+    zoomed = zoom(95, 95, 110, img)
+    cv2.imshow('Zoomed', zoomed)
+    cv2.waitKey(0)
