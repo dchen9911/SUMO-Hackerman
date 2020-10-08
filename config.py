@@ -22,3 +22,6 @@ cycle_prev = 0
 
 mode_flag = ZOOM_MODE      # change the mode
 prev_mode = ZOOM_MODE
+
+clickCoord = [] # coordinates that were clicked
+cropping = False # was there a cropping event

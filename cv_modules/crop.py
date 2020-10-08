@@ -9,8 +9,6 @@ clickCoord = []
 cropping = False
 
 
-
-
 def click_and_crop_cb(event, x, y, flags, params):
 	#print("IN")
 	global clickCoord, cropping

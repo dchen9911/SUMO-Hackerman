@@ -6,6 +6,7 @@ from contrast import changeContrastBrightness
 import cv2
 from cv_modules.testInterrupt import ZOOM_MODE, BRIGHTNESS_MODE, CONTRAST_MODE
 from cv_modules.zoom import zoom
+from cv_modules.roi import click_and_crop_cb
 import config
 # from eval import TextLocator
 
@@ -19,13 +20,15 @@ def update_image(img):
     img_to_disp = changeContrastBrightness(img, config.level_contrast, config.level_brightness)
 
     cv2.imshow("Capturing", img_to_disp)
-    cv2.waitKey(1000)
+    cv2.waitKey(1)
     return img_to_disp
 
 if __name__ == '__main__':
     ti.setup_GPIO()
 
     ti.enable_int()
+    cv2.setMouseCallback("img", click_and_crop_cb)
+
     # TODO: uncomment
     # new_locator = TextLocator() 
     #    
@@ -34,6 +37,8 @@ if __name__ == '__main__':
     config.img_fast_f = False
     img = None          # process
     original = None
+
+
     print("initialised in view finger")
     while True:
 
@@ -54,7 +59,6 @@ if __name__ == '__main__':
             # print(frame) #prints matrix values of each framecd 
             cv2.imshow("Capturing", frame)
             img_held_f = False
-       
         elif config.camera_mode == config.EDITMODE:
             if img_held_f == False:
 
@@ -92,8 +96,21 @@ if __name__ == '__main__':
                 print(config.cycle, config.cycle_prev)
                 config.cycle_prev = config.cycle
 
-            # pass
+        # can only do roi in the edit mode        
+        if config.camera_mode == EDITMODE:
+            if config.cropping is True:
 
+                config.clickCoord, validROI = checkROI(original, config, clickCoord)
+                if validROI == 1:
+                    img = original.copy()
+                elif validROI == 2:
+                    print("INTO VALID ROI")
+                    img, img_cropped = crop(img, config.clickCoord)
+                config.cropping = False
+                config.clickCoord = [] 
+                img = changeContrastBrightness(img, config.level_contrast, config.level_brightness)
+                cv2.imshow("Capturing", img)
+                cv2.waitKey(1)
         
         if config.process_img:
             # TODO: UNCOMMENT

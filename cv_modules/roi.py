@@ -1,30 +1,29 @@
 import cv2
 import numpy as np
 import argparse
+import config
 
-img = cv2.imread("3.png")
-original_img = img
-cv2.namedWindow('img', cv2.WINDOW_NORMAL)
-cv2.resizeWindow('img', 800, 570)
-#cv2.imshow("Original", img)
-cv2.imshow('img', img)
-# cv2.waitKey(0)
+# img = cv2.imread("3.png")
+# original_img = img
+# cv2.namedWindow('img', cv2.WINDOW_NORMAL)
+# cv2.resizeWindow('img', 800, 570)
+# #cv2.imshow("Original", img)
+# cv2.imshow('img', img)
+# # cv2.waitKey(0)
 
-clickCoord = []
-cropping = False
+
 
 
 def click_and_crop_cb(event, x, y, flags, params):
     print("IN")
-    global clickCoord, cropping
 
     if event == cv2.EVENT_LBUTTONDOWN:
-        clickCoord = [[x,y],]
-        cropping = False
+        config.clickCoord = [[x,y],]
+        config.cropping = False
 
     elif event == cv2.EVENT_LBUTTONUP:
-        clickCoord.append( [x,y] )
-        cropping = True
+        config.clickCoord.append( [x,y] )
+        config.cropping = True
 
 
 def crop(img, clickCoord):
