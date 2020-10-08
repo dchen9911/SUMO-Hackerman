@@ -60,8 +60,6 @@ if __name__ == '__main__':
                 # original = frame.copy()
                 print("holding image")
 
-                # fast_img = new_locator.fastLocateText(img.copy())
-                img_fast_f = 1
                 img_held_f = True
             
             if config.image_edited:
@@ -70,8 +68,9 @@ if __name__ == '__main__':
                 # img = update_image(original)
                 
                 if config.img_fast_f:
+                    print("show fast img")
                     # fast_img = new_locator.fastLocateText(img.copy())
-                    config.img_fast_f = True
+                    config.img_fast_f = False
                 print('brigtness: ' + str(config.level_brightness)) 
                 print('contrast: ' + str(config.level_contrast))
                 print('level_horz: ' +str( config.level_horz))
