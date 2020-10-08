@@ -4,7 +4,8 @@ import cv_modules.testInterrupt as ti
 import contrast 
 import cv2
 from cv_modules.testInterrupt import ZOOM_MODE, BRIGHTNESS_MODE, CONTRAST_MODE
-
+import config
+s
 # from eval import TextLocator
 
 # img2 = textlocator.findtext(img)
