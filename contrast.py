@@ -7,12 +7,37 @@ from PIL import Image as im
 from PIL import ImageEnhance
 from scipy.ndimage import interpolation as inter
 from scipy.ndimage import zoom 
+import argparse
+
 
 pytesseract.pytesseract.tesseract_cmd = r'C:\\Program Files\\Tesseract-OCR\\tesseract.exe'
 
+def changeContrastBrightness(img, level_contrast, level_brightness):
+    # Contrast
+    factor_contrast = (255 * (level_contrast+101)) / (255 * (101-level_contrast))
+    def contrast(c):
+        return 128 + factor_contrast * (c - 128)
+    img = img.point(contrast)
+
+    # brightness
+    factor_brightness = (255 * (level_brightness+101)) / (255 * (101-level_brightness))
+    enhancer = ImageEnhance.Brightness(img)
+    img = enhancer.enhance(factor_brightness)
+
+    # 
+    return img
+
+def display_image(img):
+    # cv2.imshow('image', self.img)
+    # cv2.waitKey(0)
+
+    plt.imshow(img)
+    plt.title('Output')
+    plt.show()
 
 class image_modifier():
     def __init__(self, img, contrast, zoom):
+        self.original_img = img
         self.img = img
         self.contrast = contrast
         self.zoom = zoom
@@ -38,10 +63,10 @@ class image_modifier():
 
     def change_contrast(self, level):
         # 
-        factor = (255 * (level+255)) / (255 * (255-level))
+        factor = (255 * (level+101)) / (255 * (101-level))
         def contrast(c):
             return 128 + factor * (c - 128)
-        self.img = self.img.point(contrast)
+        self.img = self.original_img.point(contrast)
     
     def display_image(self):
         # cv2.imshow('image', self.img)
@@ -50,6 +75,11 @@ class image_modifier():
         plt.imshow(self.img)
         plt.title('Output')
         plt.show()
+
+    def change_brightness(self, level):
+        factor = (255 * (level+101)) / (255 * (101-level))
+        enhancer = ImageEnhance.Brightness(self.original_img)
+        self.img = enhancer.enhance(factor)
 
     def change_zoom(self, level, **kwargs):
         # convert pil image to np image
@@ -76,6 +106,108 @@ class image_modifier():
         # convert np image to pil image
         self.img = im.fromarray(np.uint8(cm.gist_earth(pix)*255))
 
+    def roi(self):
+
+        # convert from pil to cv2 image
+        pil_image = self.img.convert('RGB') 
+        open_cv_image = np.array(pil_image) 
+        # Convert RGB to BGR 
+        img = open_cv_image[:, :, ::-1].copy() 
+
+        clickCoord = []
+        cropping = False
+
+
+        def click_and_crop_cb(event, x, y, flags, params):
+            print("IN")
+            global clickCoord, cropping
+
+            if event == cv2.EVENT_LBUTTONDOWN:
+                clickCoord = [[x,y],]
+                cropping = False
+
+            elif event == cv2.EVENT_LBUTTONUP:
+                clickCoord.append( [x,y] )
+                cropping = True
+
+
+        def crop(img, clickCoord):
+            # Find out the aspect ratio of original image
+            dims = img.shape
+            height = dims[0]
+            width = dims[1]
+            ar = width / height
+            print(width, height)
+
+            # Dummy ROI coordinates
+            minX = clickCoord[0][0]
+            minY = clickCoord[0][1]
+            maxX = clickCoord[1][0]
+            maxY = clickCoord[1][1]
+
+            # Crop out the desired region
+            if (maxX - minX) / (maxY - minY) < ar:  # Desired Y > desired X
+                correctedWidth = int((maxY - minY) * ar)
+                offset = correctedWidth - (maxX - minX)
+
+                # Check that the corrected AR region doesn't go out of frame
+                if minX - offset / 2 < 0:
+                    croppedImg = img[minY:maxY, 0:correctedWidth]
+
+                elif maxX + offset / 2 > width:
+                    croppedImg = img[minY:maxY, width - correctedWidth : width]
+
+                else:
+                    croppedImg = img[minY:maxY, int(minX - offset / 2) : int(maxX + offset / 2)]
+
+            else:  # Desired Y > desired X
+                correctedHeight = int((maxX - minX) * ar)
+                offset = correctedHeight - (maxX - minX)
+
+                # Check that the corrected AR region doesn't go out of frame
+                if minY - offset / 2 < 0:
+                    croppedImg = img[0:correctedWidth, minX:maxX]
+
+                elif maxY + offset / 2 > height:
+                    croppedImg = img[height - correctedHeight : height, minX:maxX]
+
+                else:
+                    croppedImg = img[int(minY - offset / 2) : int(maxY + offset / 2), minX:maxX]
+
+            #cv2.imshow("Cropped", croppedImg)
+            # cv2.waitKey(0)
+
+            resized = cv2.resize(croppedImg, (dims[1], dims[0]), interpolation=cv2.INTER_AREA)
+            print(resized.shape)
+
+            return resized, croppedImg
+
+
+        cv2.setMouseCallback("img", click_and_crop_cb)
+
+
+        while True:
+            
+            cv2.imshow('img', img)
+            cv2.waitKey(0)
+            #cv2.destroyAllWindows() 
+            if cropping is True:
+                print("In")
+                if len(clickCoord) == 2:
+                    #cv2.rectangle(img, clickCoord[0], clickCoord[1], (0, 255, 0), 2)
+                    if (clickCoord[0][0]>clickCoord[1][0]) or (clickCoord[0][1]>clickCoord[1][1]):
+                        temp = clickCoord[0][0]
+                        clickCoord[0][0] = clickCoord[1][0]
+                        clickCoord[1][0] = temp
+                        temp = clickCoord[0][1]
+                        clickCoord[0][1] = clickCoord[1][1]
+                        clickCoord[1][1] = temp
+                    img, cropped =  crop(img, clickCoord)
+                    #print(  len(clickCoord)  )
+                clickCoord = []
+                cropping = False
+
+
 
 
 
@@ -90,18 +222,36 @@ if __name__ == "__main__":
     img = cv2.imread(img_path)
     img2 = im.open(img_path) 
 
+    img3 = changeContrastBrightness(img2, 20, 20)
+    display_image(img3)
 
     imgHandler = image_modifier(img2, 5,5)
     imgHandler.display_image()
     # imgHandler.boost_contrast(6)
     # imgHandler.display_image()
 
-    # cannot have number >=255 and <-255 is pure grey
-    imgHandler.change_contrast(-200)
+    imgHandler.change_brightness(99)
     imgHandler.display_image()
 
+    # cannot have number >=255 and <-255 is pure grey
+    while True:
+        text = input("Contrast Number between : ")
+        # if text.is_integer():
+        #     print("Error, must be a number between -100 and 100")
+        #     continue
+        text = int(text)
+        if text > 100:
+            text = int(input("Error, number needs to be between -100 and 100: "))
+        if text < -100:
+            text = int(input("Error, number needs to be between -100 and 100: "))
+        if text == 0:
+            break
+
+        imgHandler.change_contrast(text)
+        imgHandler.display_image()
+
     # change zoom
-    imgHandler.change_zoom(1.5)
+    # imgHandler.roi()
 
 
     #configuration setting to convert image to string.  
