@@ -19,6 +19,9 @@ def update_image(img):
     return img_to_disp
 
 if __name__ == '__main__':
+    cv2.namedWindow('Capturing', cv2.WINDOW_NORMAL)
+    cv2.resizeWindow('Capturing', 800, 570)
+    
     ti.setup_GPIO()
 
     ti.enable_int()
