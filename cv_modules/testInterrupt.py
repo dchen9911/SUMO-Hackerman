@@ -105,6 +105,7 @@ def dpup_cb(channel):
         level_contrast += 10
     elif mode_flag == BRIGHTNESS_MODE:
         level_brightness += 10
+    image_edited = True
 
     print(GPIO.input(channel))
 
@@ -119,6 +120,8 @@ def dpdown_cb(channel):
         level_contrast -= 10
     elif mode_flag == BRIGHTNESS_MODE:
         level_brightness -= 10
+
+    image_edited = True
     print(GPIO.input(channel))
 
 # DP Left callback
@@ -126,6 +129,8 @@ def dpleft_cb(channel):
     print("DPAD Left: Rising edge detected")
     if mode_flag == PAN_MODE:
         level_horz -= 10
+        image_edited = True
+
     else
         camera_mode = VIEWFINDERMODE
     print(GPIO.input(channel))
@@ -135,31 +140,22 @@ def dpright_cb(channel):
     print("DPAD Right: Rising edge detected")
     if mode_flag == PAN_MODE:
         level_horz += 10
-    elif mode_flag == ZOOM_MODE:
         image_edited = True
-    elif mode_flag == CONTRAST_MODE:
-        image_edited = True
-    elif mode_flag == BRIGHTNESS_MODE:
-        image_edited = True
+    else:
+        process_img = True
     print(GPIO.input(channel))
 
 # Toggle callback
 def toggle_cb(channel):
     print("TOGGLE: Rising edge detected")
-    global toggle_flag
-    toggle_flag = 1
-    print(GPIO.input(channel))
-    
-def button_cb(channel):
-    print("Button callback")
-    if channel == BUTTON:
-        global pan_left
-        if GPIO.input(channel):
-            pan_left = 1
-        else:
-            pan_left = 0
-        GPIO.output(OUTPUT, GPIO.input(channel))
-            
+
+    if mode_flag != PAN_MODE:
+        prev_mode = mode_flag
+        mode_flag = PAN_MODE
+    else:
+        mode_flag = prev_mode
+
+    print(GPIO.input(channel))         
 
             
 if __name__ == "__main__":
