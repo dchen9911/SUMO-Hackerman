@@ -12,6 +12,28 @@ import argparse
 
 pytesseract.pytesseract.tesseract_cmd = r'C:\\Program Files\\Tesseract-OCR\\tesseract.exe'
 
+def changeContrastBrightness(img, level_contrast, level_brightness):
+    # Contrast
+    factor_contrast = (255 * (level_contrast+101)) / (255 * (101-level_contrast))
+    def contrast(c):
+        return 128 + factor_contrast * (c - 128)
+    img = img.point(contrast)
+
+    # brightness
+    factor_brightness = (255 * (level_brightness+101)) / (255 * (101-level_brightness))
+    enhancer = ImageEnhance.Brightness(img)
+    img = enhancer.enhance(factor_brightness)
+
+    # 
+    return img
+
+def display_image(img):
+    # cv2.imshow('image', self.img)
+    # cv2.waitKey(0)
+
+    plt.imshow(img)
+    plt.title('Output')
+    plt.show()
 
 class image_modifier():
     def __init__(self, img, contrast, zoom):
@@ -200,6 +222,8 @@ if __name__ == "__main__":
     img = cv2.imread(img_path)
     img2 = im.open(img_path) 
 
+    img3 = changeContrastBrightness(img2, 20, 20)
+    display_image(img3)
 
     imgHandler = image_modifier(img2, 5,5)
     imgHandler.display_image()
