@@ -26,7 +26,7 @@ if __name__ == '__main__':
     ti.setup_GPIO()
     ti.enable_int()
 
-    cv2.setMouseCallback("Capturing", click_and_crop_cb)
+    # cv2.setMouseCallback("Capturing", click_and_crop_cb)
 
     new_locator = TextLocator() 
 
@@ -100,21 +100,21 @@ if __name__ == '__main__':
             cv2.imshow("Capturing", img)
             cv2.waitKey(1)
 
-        # can only do roi in the edit mode        
-        if config.camera_mode == config.EDITMODE and img is not None:
-            if config.cropping is True:
-                print("Doing the cropping")
-                config.clickCoord, validROI = checkROI(original, config.clickCoord)
-                if validROI == 1:
-                    img = original.copy()
-                elif validROI == 2:
-                    print("INTO VALID ROI")
-                    img, img_cropped = crop(img, config.clickCoord)
-                config.cropping = False
-                config.clickCoord = [] 
-                img = changeContrastBrightness(img, config.level_contrast, config.level_brightness)
-                cv2.imshow("Capturing", img)
-                cv2.waitKey(1)
+        # # can only do roi in the edit mode        
+        # if config.camera_mode == config.EDITMODE and img is not None:
+        #     if config.cropping is True:
+        #         print("Doing the cropping")
+        #         config.clickCoord, validROI = checkROI(original, config.clickCoord)
+        #         if validROI == 1:
+        #             img = original.copy()
+        #         elif validROI == 2:
+        #             print("INTO VALID ROI")
+        #             img, img_cropped = crop(img, config.clickCoord)
+        #         config.cropping = False
+        #         config.clickCoord = [] 
+        #         img = changeContrastBrightness(img, config.level_contrast, config.level_brightness)
+        #         cv2.imshow("Capturing", img)
+        #         cv2.waitKey(1)
         
         if config.process_img:
             img = new_locator.findText(original.copy())
