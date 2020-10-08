@@ -57,11 +57,11 @@ if __name__ == '__main__':
                 # TODO: Uncomment and comment prints
                 # update alles
                 # img = update_image(original)
-                print('brigtness: ' + config.level_brightness)
-                print('contrast: ' + config.level_contrast)
-                print('level_horz: ' + config.level_horz)
-                print('level_vert: ' + config.level_vert)
-                print('level_zoom: ' + config.level_zoom)
+                print('brigtness: ' + str(config.level_brightness)) 
+                print('contrast: ' + str(config.level_contrast))
+                print('level_horz: ' +str( config.level_horz))
+                print('level_vert: ' +str( config.level_vert))
+                print('level_zoom: ' +str( config.level_zoom))
                 config.image_edited = False
                 pass
         
