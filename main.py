@@ -1,14 +1,11 @@
-# TODO: UNCOMMENT
-# from eval import TextLocator
+from eval import TextLocator
 import cv_modules.testInterrupt as ti
-# import cv_modules.roi as roi
 from contrast import changeContrastBrightness 
 import cv2
 from cv_modules.testInterrupt import ZOOM_MODE, BRIGHTNESS_MODE, CONTRAST_MODE
 from cv_modules.zoom import zoom
 from cv_modules.roi import click_and_crop_cb, checkROI, crop
 import config
-# from eval import TextLocator
 
 
 def update_image(img):
