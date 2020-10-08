@@ -18,7 +18,8 @@ def update_image(img):
     img_to_disp = changeContrastBrightness(img, config.level_contrast, config.level_brightness)
 
     cv2.imshow("Capturing", img_to_disp)
-    return img
+    cv2.waitKey(1000)
+    return img_to_disp
 
 if __name__ == '__main__':
     ti.setup_GPIO()
@@ -64,6 +65,7 @@ if __name__ == '__main__':
             
             if config.image_edited:
                 # update all things
+                print("Updating the image)")
                 img = update_image(original.copy())
                 
                 if config.img_fast_f == True:
@@ -78,7 +80,7 @@ if __name__ == '__main__':
                 pass
 
         elif config.camera_mode == config.INTERPRETMODE:
-            print('switch to interpret mode')
+            # print('switch to interpret mode')
 
             if config.cycle > config.cycle_prev:
                 # img = getNext(img.copy())
