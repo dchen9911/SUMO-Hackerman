@@ -63,7 +63,6 @@ if __name__ == '__main__':
 
             camera.capture(rawCapture, format="bgr")
             frame = cv2.cvtColor(rawCapture.array, cv2.COLOR_BGR2RGB) 
-           
             
             # viewfinder mode
             # print(check) #prints true as long as the webcam is running
