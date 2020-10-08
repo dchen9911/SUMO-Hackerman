@@ -27,7 +27,7 @@ if __name__ == '__main__':
     ti.setup_GPIO()
 
     ti.enable_int()
-    cv2.setMouseCallback("img", click_and_crop_cb)
+    cv2.setMouseCallback("Capturing", click_and_crop_cb)
 
     # TODO: uncomment
     # new_locator = TextLocator() 
@@ -97,7 +97,7 @@ if __name__ == '__main__':
                 config.cycle_prev = config.cycle
 
         # can only do roi in the edit mode        
-        if config.camera_mode == EDITMODE:
+        if config.camera_mode == config.EDITMODE:
             if config.cropping is True:
 
                 config.clickCoord, validROI = checkROI(original, config, clickCoord)
