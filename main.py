@@ -12,7 +12,7 @@ from picamera.array import PiRGBArray
 from picamera import PiCamera
 
 camera = PiCamera()
-camera.resolution = (2592, 1952)
+camera.resolution = (2592, 1944)
 # camera.framerate = 10
 
 def update_image(img):
