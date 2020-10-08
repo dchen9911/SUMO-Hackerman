@@ -14,6 +14,7 @@ pytesseract.pytesseract.tesseract_cmd = r'C:\\Program Files\\Tesseract-OCR\\tess
 
 def changeContrastBrightness(img, level_contrast, level_brightness):
     # Contrast
+    img = im.fromarray(img)
     factor_contrast = (255 * (level_contrast+101)) / (255 * (101-level_contrast))
     def contrast(c):
         return 128 + factor_contrast * (c - 128)
@@ -216,13 +217,11 @@ if __name__ == "__main__":
     img_name = '1'
 
     img_path = 'tmp/'+ img_name + '.jpg'
-    info_path = 'tmp/' + img_name + '.txt'
 
     # img.create(rows, cols, CV_8UC1)
     img = cv2.imread(img_path)
-    img2 = im.open(img_path) 
 
-    img3 = changeContrastBrightness(img2, 20, 20)
+    img3 = changeContrastBrightness(im, 20, 20)
     display_image(img3)
 
     imgHandler = image_modifier(img2, 5,5)
