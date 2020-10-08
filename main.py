@@ -43,7 +43,7 @@ if __name__ == '__main__':
             # cv2.imshow("Capturing", frame)
             img_held_f = False
        
-        elif camera_mode == config.EDITMODE:
+        elif config.camera_mode == config.EDITMODE:
             if img_held_f == False:
                 # TODO: uncomment
                 # check, frame = webcam.read()
