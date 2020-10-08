@@ -1,18 +1,18 @@
-# TODO: Consider case of vertical text (maybe try rotatating both ways
-# apparently the text always goes down, so rotate counter clockwise
 # TODO: image preprocessing on warped output to get better OCR performance
-
 import cv2
 import numpy as np
 import matplotlib.pyplot as plt
 import pytesseract
-from PIL import Image as im
 from scipy.ndimage import interpolation as inter
+
+import shutil
+import os
+import glob
 
 # img contains the image data
 # coords_str is a string of 8 comma separated coordinates, 4 * (x,y) coordinates)
 # returns coords, the original coordinates and the flattened region
-def crop_rotated_rect(img, coords_str):
+def crop_rotated_rect(img, coords_str, debug=False):
     coords = []
     split_coords_str =  coords_str.strip().split(',')
     for i in range(int(len(split_coords_str)/2)):
@@ -49,34 +49,71 @@ def crop_rotated_rect(img, coords_str):
 
     # directly warp the rotated rectangle to get the straightened rectangle
     warped = cv2.warpPerspective(img, M, (width, height))
-    plt.imshow(warped)
-    plt.show()
+    if debug:
+        cv2.imshow('image', warped)
+        cv2.waitKey(0)
 
-    # def find_score(arr, angle):
-    #     data = inter.rotate(arr, angle, reshape=False, order=0)
-    #     hist = np.sum(data, axis=1)
-    #     score = np.sum((hist[1:] - hist[:-1]) ** 2)
-    #     return hist, score
-
-
-    # delta = 1
-    # limit = 5
-    # angles = np.arange(-limit, limit+delta, delta)
-    # scores = []
-    # for angle in angles:
-    #     hist, score = find_score(warped, angle)
-    #     scores.append(score)
-    # best_score = max(scores)
-    # best_angle = angles[scores.index(best_score)]
-    # print('Best angle: {}'.format(best_angle))
-
-    # # correct skew
-    # data = inter.rotate(warped, best_angle, reshape=False, order=0)
-    # img = im.fromarray((255 * data).astype("uint8")).convert("RGB")
+    im_h, im_w , _ = warped.shape
+    print("Width {}, height: {}".format(im_w, im_h))
+    # this means text is vertical
+    if im_h > 2*im_w:
+        # rotated by 90 deg
+        warped = warped.swapaxes(0,1)[::-1,:,:]
+        if debug:
+            cv2.imshow('image', warped)
+            cv2.waitKey(0)
 
     return coords, warped
 
+# make the image black and white, get rid of noise text thick
+def process_for_OCR(imgf, debug=False):
+    if debug:
+        cv2.imshow('image', imgf)
+        cv2.waitKey(0)
 
+    #noise removal
+    #decoloring noise using non local means
+    imgf = cv2.fastNlMeansDenoisingColored(imgf, None, 10, 10, 7, 21)
+    if debug:
+        cv2.imshow('image', imgf)
+        cv2.waitKey(0)
+
+    # applies gaussian blur
+    imgf = cv2.GaussianBlur(imgf, (3,3), 0)
+    if debug:
+        cv2.imshow('image', imgf)
+        cv2.waitKey(0)
+
+    # # turns image greyscale
+    # imgf = cv2.cvtColor(imgf, cv2.COLOR_BGR2GRAY)
+    # cv2.imshow('image', imgf)
+    # cv2.waitKey(0)
+
+    # # binirisation
+    # # adaptive gaussian binzrisation threshold
+    # imgf = cv2.adaptiveThreshold(imgf,255,cv2.ADAPTIVE_THRESH_GAUSSIAN_C,cv2.THRESH_BINARY,11,2) #imgf contains Binary image
+    # cv2.imshow('image', imgf)
+    # cv2.waitKey(0)
+
+    # Thinning and skeletonising 
+    # using erode and dilate
+    kernel = np.ones((3,3),np.uint8)
+    imgf = cv2.dilate(imgf,kernel,iterations=1)
+    imgf = cv2.erode(imgf,kernel,iterations=1)
+    if debug:
+        cv2.imshow('image', imgf)
+        cv2.waitKey(0)
+
+    # # changes back to color image
+    # imgf = cv2.cvtColor(imgf, cv2.COLOR_GRAY2BGR)
+    # cv2.imshow('image', imgf)
+    # cv2.waitKey(0)
+
+
+
+    return imgf
+
+# boosts contrast, expects bgr image
 def boost_contrast(img):
     #-----Converting image to LAB Color model----------------------------------- 
     lab= cv2.cvtColor(img, cv2.COLOR_BGR2LAB)
@@ -95,91 +132,69 @@ def boost_contrast(img):
     final = cv2.cvtColor(limg, cv2.COLOR_LAB2BGR)
     return final
 
-# make the image black and white, get rid of noise text thick
-def process_for_OCR(imgf):
-    cv2.imshow('image', imgf)
-    cv2.waitKey(0)
 
-    # noise removal
-    # decoloring noise using non local means
-    imgf = cv2.fastNlMeansDenoisingColored(imgf, None, 10, 10, 7, 21)
-    cv2.imshow('image', imgf)
-    cv2.waitKey(0)
-
-    # applies gaussian blur
-    imgf = cv2.GaussianBlur(imgf, (5,5), 0)
-    cv2.imshow('image', imgf)
-    cv2.waitKey(0)
-
-    # # turns image greyscale
-    # imgf = cv2.cvtColor(imgf, cv2.COLOR_BGR2GRAY)
-    # cv2.imshow('image', imgf)
-    # cv2.waitKey(0)
-
-    # # binirisation
-    # # adaptive gaussian binzrisation threshold
-    # imgf = cv2.adaptiveThreshold(imgf,255,cv2.ADAPTIVE_THRESH_GAUSSIAN_C,cv2.THRESH_BINARY,11,2) #imgf contains Binary image
-    # cv2.imshow('image', imgf)
-    # cv2.waitKey(0)
-
-
-    # Thinning and skeletonising 
-    # using erode and dilate
-    kernel = np.ones((3,3),np.uint8)
-    imgf = cv2.erode(imgf,kernel,iterations=1)
-    imgf = cv2.dilate(imgf,kernel,iterations=1)
-    cv2.imshow('image', imgf)
-    cv2.waitKey(0)
-
-    # # changes back to color image
-    # imgf = cv2.cvtColor(imgf, cv2.COLOR_GRAY2BGR)
-    # cv2.imshow('image', imgf)
-    # cv2.waitKey(0)
-
-
-
-    return imgf
     # pass
     # return processed_img
 
 
 if __name__ == "__main__":
-    img_name = '027'
 
-    img_path = 'tmp/'+ img_name + '.jpg'
-    info_path = 'tmp/' + img_name + '.txt'
+    in_folder = 'test_images/'
+    out_folder = 'output_ims/'
+    if not os.path.exists(out_folder):
+        os.mkdir(out_folder)
 
-    # img.create(rows, cols, CV_8UC1)
-    img = cv2.imread(img_path)
+    fpaths = glob.glob(in_folder + '*.jpg')
 
-    #configuration setting to convert image to string.  
-    configuration = ("-l eng --oem 1 --psm 8")
+    for i, filepath in enumerate(fpaths):
+        filename = filepath.split('/')[-1]
 
-    # points for test.jpg
-    f = open(info_path, 'r')
-
-    all_coords = []
-    all_texts = []
-    for line in f.readlines():
-        coords_str = line.strip()
-
-        coords, flat_rect = crop_rotated_rect(img, coords_str)
-        flat_rect = process_for_OCR(flat_rect)
-
-        # convert from bgr to rgb
-        flat_rect = cv2.cvtColor(flat_rect, cv2.COLOR_BGR2RGB)
-
-        # This will recognize the text from flattened bounding box
-        text = pytesseract.image_to_string(flat_rect, config=configuration)
-        print("{}\n".format(text))
+        img_name = filename.split('.')[0]
         
+        img_path = in_folder + img_name + '.jpg'
+        info_path = out_folder + img_name + '.txt'
 
-        # only add text if the character is english
-        text_to_add = "".join([x if ord(x) < 128 else "" for x in text]).strip()
-        print(coords)
-        cv2.putText(img, text_to_add, (coords[0][0][0], coords[0][0][1] - 10),
-            cv2.FONT_HERSHEY_SIMPLEX, 0.7,(0,0, 255), 2)
-    
-    plt.imshow(img)
-    plt.title('Output')
-    plt.show()
+        out_img_path = out_folder+ img_name +  '_text' + '.jpg'
+        out_info_path = out_folder + img_name + '_text' + '.txt'
+
+        img = cv2.imread(img_path)
+
+        img_to_disp = cv2.imread(out_folder+ img_name + '.jpg')
+
+        #configuration setting to convert image to string.  
+        configuration = ("-l eng --oem 1 --psm 8")
+
+        # points for test.jpg
+        if os.path.exists(info_path):
+            f = open(info_path, 'r')
+        else:
+            print("Img {} has no text".format(img_name))
+
+        all_coords = []
+        all_texts = []
+
+        f_out = open(out_info_path, 'w+')
+        for line in f.readlines():
+            coords_str = line.strip()
+
+            coords, flat_rect = crop_rotated_rect(img, coords_str)
+            flat_rect = process_for_OCR(flat_rect, debug=False)
+
+            # convert from bgr to rgb
+            flat_rect = cv2.cvtColor(flat_rect, cv2.COLOR_BGR2RGB)
+
+            # This will recognize the text from flattened bounding box
+            text = pytesseract.image_to_string(flat_rect, config=configuration)
+            f_out.write("{}\n".format(text))        
+
+            # only add text if the character is english
+            text_to_add = "".join([x if ord(x) < 128 else "" for x in text]).strip()
+            # print(coords)
+            cv2.putText(img_to_disp, text_to_add, (coords[0][0][0], coords[0][0][1] - 10),
+                cv2.FONT_HERSHEY_SIMPLEX, 2,(0,0, 255), 5)
+            cv2.imwrite(out_img_path, img_to_disp) 
+        
+        img_to_disp = cv2.cvtColor(img_to_disp, cv2.COLOR_BGR2RGB)
+        # plt.imshow(img_to_disp)
+        # plt.show()
+        f_out.close()
