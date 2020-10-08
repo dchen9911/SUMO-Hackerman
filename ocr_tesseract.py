@@ -127,7 +127,7 @@ class TextRecogniser:
             cropped_rects.append(flat_rect.copy())
             flat_rect = process_for_OCR(flat_rect, debug=False)
             
-            # convert from bgr to rgb
+            # convert from bgr to rgb 
             flat_rect = cv2.cvtColor(flat_rect, cv2.COLOR_BGR2RGB)
 
             # This will recognize the text from flattened bounding box
