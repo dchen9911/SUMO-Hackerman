@@ -248,7 +248,7 @@ class TextLocator:
     def get_next_word(self):
         # means there is no text being detected
         if self.cropped_rects is None or not self.img_strings:
-            return generate_displayed_img("Error")
+            return self.generate_displayed_img("Error")
         self.curr_ind += 1 
         self.curr_ind %= len(self.cropped_rects)
         i = self.curr_ind
