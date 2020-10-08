@@ -9,6 +9,8 @@ import pytesseract
 from PIL import Image as im
 from scipy.ndimage import interpolation as inter
 
+pytesseract.pytesseract.tesseract_cmd = r'C:\\Program Files\\Tesseract-OCR\\tesseract.exe'
+
 # img contains the image data
 # coords_str is a string of 8 comma separated coordinates, 4 * (x,y) coordinates)
 # returns coords, the original coordinates and the flattened region
@@ -144,7 +146,7 @@ def process_for_OCR(imgf):
 
 
 if __name__ == "__main__":
-    img_name = '027'
+    img_name = '001'
 
     img_path = 'tmp/'+ img_name + '.jpg'
     info_path = 'tmp/' + img_name + '.txt'
