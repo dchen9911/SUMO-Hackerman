@@ -1,6 +1,7 @@
 import RPi.GPIO as GPIO
 import time
 
+PAN_MODE = 0
 ZOOM_MODE = 1
 CONTRAST_MODE = 2
 BRIGHTNESS_MODE = 3
@@ -74,15 +75,16 @@ def disable_int():
 # Camera callback
 def camera_cb(channel):
     print("CAMERA: Rising edge detected")
-    global camera_flag
-    camera_flag = 1
+    
+    camera_mode = not camera_mode
+
     print(GPIO.input(channel))
 
 # Mode callback
 def mode_cb(channel):
     print("MODE: Rising edge detected")
     global mode_flag
-
+    
     if mode_flag == ZOOM_MODE:
         mode_flag == CONTRAST_MODE
     if mode_flag == CONTRAST_MODE:
@@ -94,29 +96,51 @@ def mode_cb(channel):
 # DP Up callback
 def dpup_cb(channel):
     print("DPAD UP: Rising edge detected")
-    global dpup_flag
-    dpup_flag = 1
+
+    if mode_flag == PAN_MODE:
+        level_vert += 10
+    if mode_flag == ZOOM_MODE:
+        level_zoom += 10
+    elif mode_flag == CONTRAST_MODE:
+        level_contrast += 10
+    elif mode_flag == BRIGHTNESS_MODE:
+        level_brightness += 10
+
     print(GPIO.input(channel))
 
 # DP Down callback
 def dpdown_cb(channel):
     print("DPAD Down: Rising edge detected")
-    global dpdown_flag
-    dpdown_flag = 1
+    if mode_flag == PAN_MODE:
+        level_vert -= 10
+    elif mode_flag == ZOOM_MODE:
+        level_zoom -= 10
+    elif mode_flag == CONTRAST_MODE:
+        level_contrast -= 10
+    elif mode_flag == BRIGHTNESS_MODE:
+        level_brightness -= 10
     print(GPIO.input(channel))
 
 # DP Left callback
 def dpleft_cb(channel):
     print("DPAD Left: Rising edge detected")
-    global dpleft_flag
-    dpleft_flag = 1
+    if mode_flag == PAN_MODE:
+        level_horz -= 10
+    else
+        camera_mode = VIEWFINDERMODE
     print(GPIO.input(channel))
 
 # DP Up callback
 def dpright_cb(channel):
     print("DPAD Right: Rising edge detected")
-    global dpright_flag
-    dpright_flag = 1
+    if mode_flag == PAN_MODE:
+        level_horz += 10
+    elif mode_flag == ZOOM_MODE:
+        image_edited = True
+    elif mode_flag == CONTRAST_MODE:
+        image_edited = True
+    elif mode_flag == BRIGHTNESS_MODE:
+        image_edited = True
     print(GPIO.input(channel))
 
 # Toggle callback
