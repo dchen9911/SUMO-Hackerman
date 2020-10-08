@@ -21,8 +21,9 @@ def update_image(img):
 
 if __name__ == '__main__':
     tf.setup_GPIO()
+
     ti.enable_int()
-    new_locator = TextLocator()
+    # new_locator = TextLocator()
 
     # TODO: uncomment
     # webcam = cv2.VideoCapture(0) 
@@ -31,7 +32,7 @@ if __name__ == '__main__':
     original = None
     while True:
 
-        if camera_mode == config.VIEWFINDERMODE:
+        if config.camera_mode == config.VIEWFINDERMODE:
             # TODO: uncomment
             # check, frame = webcam.read()
 
