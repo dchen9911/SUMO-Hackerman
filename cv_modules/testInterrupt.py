@@ -51,6 +51,11 @@ def setup_GPIO():
     GPIO.setup(BUTLED1, GPIO.OUT)
     GPIO.setup(BUTLED2, GPIO.OUT)
 
+    # start off in zoom mode
+    GPIO.output(BUTLED1, True)
+    GPIO.output(BUTLED2, False) 
+
+
 
   
 def enable_int():
