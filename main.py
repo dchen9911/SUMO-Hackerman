@@ -28,6 +28,7 @@ if __name__ == '__main__':
     # new_locator = TextLocator()    
     # webcam = cv2.VideoCapture(0) 
     img_held_f = False
+    config.img_fast_f = False
     img = None          # process
     original = None
     print("initialised in view finger")
@@ -58,12 +59,19 @@ if __name__ == '__main__':
                 # img = frame
                 # original = frame.copy()
                 print("holding image")
+
+                # fast_img = new_locator.fastLocateText(img.copy())
+                img_fast_f = 1
                 img_held_f = True
             
             if config.image_edited:
                 # TODO: Uncomment and comment prints
                 # update alles
                 # img = update_image(original)
+                
+                if config.img_fast_f:
+                    # fast_img = new_locator.fastLocateText(img.copy())
+                    config.img_fast_f = True
                 print('brigtness: ' + str(config.level_brightness)) 
                 print('contrast: ' + str(config.level_contrast))
                 print('level_horz: ' +str( config.level_horz))
@@ -73,7 +81,9 @@ if __name__ == '__main__':
                 pass
 
         elif config.camera_mode == config.INTERPRETMODE:
-            # 
+            print('switch to interpret mode')
+            # img = getNext(img.)
+            # pass
 
         
         if config.process_img:

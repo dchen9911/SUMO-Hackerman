@@ -15,6 +15,7 @@ level_brightness = 0
 image_edited = False
 
 process_img = False
+img_fast_f = False
 
 
 mode_flag = ZOOM_MODE      # change the mode
