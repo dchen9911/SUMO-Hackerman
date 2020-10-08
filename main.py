@@ -52,6 +52,7 @@ if __name__ == '__main__':
 
         if config.camera_mode == config.VIEWFINDERMODE:
             fast_img_disped = False
+            config.img_fast_f = False
             config.level_vert = 0
             config.level_horz = 0
             config.level_zoom = 0
