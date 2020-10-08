@@ -2,7 +2,7 @@
 # from eval import TextLocator
 import cv_modules.testInterrupt as ti
 # import cv_modules.roi as roi
-import contrast 
+from contrast import changeContrastBrightness 
 import cv2
 from cv_modules.testInterrupt import ZOOM_MODE, BRIGHTNESS_MODE, CONTRAST_MODE
 import config
@@ -13,7 +13,7 @@ import config
 
 def update_image(img):
     # CHANGE FUNCTION TO DNAIELS
-    img = zoom(config.level_horz, config.level_vert, config.level_zoom, img.copy())
+    # img = zoom(config.level_horz, config.level_vert, config.level_zoom, img.copy())
 
     img_to_disp = changeContrastBrightness(img, config.level_contrast, config.level_brightness)
 
@@ -45,7 +45,6 @@ if __name__ == '__main__':
 
             check, frame = webcam.read()
            
-            print("read a frame")
             # dispaly it for 1 ms
             cv2.waitKey(1)
             # viewfinder mode
@@ -56,8 +55,6 @@ if __name__ == '__main__':
        
         elif config.camera_mode == config.EDITMODE:
             if img_held_f == False:
-                # TODO: uncomment
-                # check, frame = webcam.read()
 
                 img = frame
                 original = frame.copy()
@@ -66,9 +63,8 @@ if __name__ == '__main__':
                 img_held_f = True
             
             if config.image_edited:
-                # TODO: Uncomment and comment prints
-                # update alles
-                # img = update_image(original)
+                # update all things
+                img = update_image(original.copy())
                 
                 if config.img_fast_f == True:
                     print("show fast img")
