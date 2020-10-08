@@ -42,7 +42,12 @@ def setup_GPIO():
     GPIO.setup(BUTDPDOWN, GPIO.IN, pull_up_down=GPIO.PUD_DOWN)     
     GPIO.setup(BUTDPLEFT, GPIO.IN, pull_up_down=GPIO.PUD_DOWN)     
     GPIO.setup(BUTDPRIGHT, GPIO.IN, pull_up_down=GPIO.PUD_DOWN)     
-    GPIO.setup(BUTTOGGLE, GPIO.IN, pull_up_down=GPIO.PUD_DOWN)     
+    GPIO.setup(BUTTOGGLE, GPIO.IN, pull_up_down=GPIO.PUD_DOWN)
+
+    GPIO.setup(BUTCAMERA, GPIO.IN, pull_up_down=GPIO.PUD_DOWN)
+    GPIO.setup(BUTMODE, GPIO.IN, pull_up_down=GPIO.PUD_DOWN)
+
+
 
   
 def enable_int():
@@ -67,7 +72,7 @@ def enable_int():
     # toggle
     GPIO.add_event_detect(BUTTOGGLE, GPIO.FALLING, callback=toggle_cb, bouncetime=200)
 
-    GPIO.add_event_detect(BUTTON, GPIO.BOTH, callback=button_cb, bouncetime=200)
+    # GPIO.add_event_detect(BUTTON, GPIO.BOTH, callback=button_cb, bouncetime=200)
 
 def disable_int():
     GPIO.remove_event_detect(BUTCAMERA)
