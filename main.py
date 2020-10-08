@@ -70,7 +70,6 @@ if __name__ == '__main__':
                 if config.img_fast_f == False:
                     print("show fast img")
                     # fast_img = new_locator.fastLocateText(img.copy())
-                    config.img_fast_f = True
                 print('brigtness: ' + str(config.level_brightness)) 
                 print('contrast: ' + str(config.level_contrast))
                 print('level_horz: ' +str( config.level_horz))
