@@ -6,9 +6,12 @@ import math
 import os
 import numpy as np
 import tensorflow as tf
+import matplotlib.pyplot as plt
 
 import locality_aware_nms as nms_locality
 import lanms
+
+from ocr_tesseract import TextRecogniser
 
 tf.app.flags.DEFINE_string('test_data_path', '/tmp/ch4_test_images/images/', '')
 tf.app.flags.DEFINE_string('gpu_list', '0', '')
@@ -16,26 +19,10 @@ tf.app.flags.DEFINE_string('checkpoint_path', './east_icdar2015_resnet_v1_50_rbo
 tf.app.flags.DEFINE_string('output_dir', '/tmp/ch4_test_images/images/', '')
 tf.app.flags.DEFINE_bool('no_write_images', False, 'do not write images')
 
-import model
-from icdar import restore_rectangle
-
 FLAGS = tf.app.flags.FLAGS
 
-def get_images():
-    '''
-    find image files in test data path
-    :return: list of files found
-    '''
-    files = []
-    exts = ['jpg', 'png', 'jpeg', 'JPG']
-    for parent, dirnames, filenames in os.walk(FLAGS.test_data_path):
-        for filename in filenames:
-            for ext in exts:
-                if filename.endswith(ext):
-                    files.append(os.path.join(parent, filename))
-                    break
-    print('Find {} images'.format(len(files)))
-    return files
+import model
+from icdar import restore_rectangle
 
 
 def resize_image(im, max_side_len=2400):
@@ -123,6 +110,80 @@ def sort_poly(p):
     else:
         return p[[0, 3, 2, 1]]
 
+class TextLocator:
+
+    def __init__(self):
+        import os
+        os.environ['CUDA_VISIBLE_DEVICES'] = FLAGS.gpu_list
+
+        tf.get_default_graph().as_default()
+        self.input_images = tf.placeholder(tf.float32, shape=[None, None, None, 3], name='input_images')
+        global_step = tf.get_variable('global_step', [], initializer=tf.constant_initializer(0), trainable=False)
+
+        self.f_score, self.f_geometry = model.model(self.input_images, is_training=False)
+
+        variable_averages = tf.train.ExponentialMovingAverage(0.997, global_step)
+        saver = tf.train.Saver(variable_averages.variables_to_restore())
+
+        self.sess = tf.Session(config=tf.ConfigProto(allow_soft_placement=True)) 
+        ckpt_state = tf.train.get_checkpoint_state(FLAGS.checkpoint_path)
+        model_path = os.path.join(FLAGS.checkpoint_path, os.path.basename(ckpt_state.model_checkpoint_path))
+        print('Restore from {}'.format(model_path))
+        saver.restore(self.sess, model_path)
+
+
+        self.ocr_tool = TextRecogniser()
+    
+    # takes in the raw image data
+    # returns the annotated image
+    def findText(self, im):
+        im_orig = im.copy()
+        im = im[:, :, ::-1]
+
+        start_time = time.time()
+        im_resized, (ratio_h, ratio_w) = resize_image(im)
+
+        timer = {'net': 0, 'restore': 0, 'nms': 0}
+        start = time.time()
+        score, geometry = self.sess.run([self.f_score, self.f_geometry], feed_dict={self.input_images: [im_resized]})
+        timer['net'] = time.time() - start
+
+        boxes, timer = detect(score_map=score, geo_map=geometry, timer=timer)
+        print('net {:.0f}ms, restore {:.0f}ms, nms {:.0f}ms'.format(
+            timer['net']*1000, timer['restore']*1000, timer['nms']*1000))
+
+        if boxes is not None:
+            boxes = boxes[:, :8].reshape((-1, 4, 2))
+            boxes[:, :, 0] /= ratio_w
+            boxes[:, :, 1] /= ratio_h
+
+        duration = time.time() - start_time
+        print('[timing] {}'.format(duration))
+
+        coords_strs = []
+
+        # if there are boxes, draw them onto the image
+        if boxes is not None:
+            for box in boxes:
+                # to avoid submitting errors
+                box = sort_poly(box.astype(np.int32))
+                if np.linalg.norm(box[0] - box[1]) < 5 or np.linalg.norm(box[3]-box[0]) < 5:
+                    continue
+                coords_str = '{},{},{},{},{},{},{},{}\r\n'.format(
+                    box[0, 0], box[0, 1], box[1, 0], box[1, 1], box[2, 0], box[2, 1], box[3, 0], box[3, 1],
+                )
+                coords_strs.append(coords_str)
+                cv2.polylines(im[:, :, ::-1], [box.astype(np.int32).reshape((-1, 1, 2))], True, color=(255, 255, 0), thickness=7)
+        # cv2.imshow('image', im[:, :, ::-1])
+        # cv2.waitKey(0)
+        # plt.imshow(im)
+        # plt.show()
+        return self.ocr_tool.recogniseText(im_orig, im[:, :, ::-1], coords_strs)
+
+
+
+
+
 def main(argv=None):
     import os
     os.environ['CUDA_VISIBLE_DEVICES'] = FLAGS.gpu_list
@@ -193,4 +254,6 @@ def main(argv=None):
                     cv2.imwrite(img_path, im[:, :, ::-1])
 
 if __name__ == '__main__':
-    tf.app.run()
+    textloc = TextLocator()
+    im = cv2.imread('test_images/IMG_20201008_113548.jpg')
+    textloc.findText(im)
