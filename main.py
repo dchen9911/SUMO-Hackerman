@@ -12,7 +12,6 @@ from picamera.array import PiRGBArray
 from picamera import PiCamera
 
 camera = PiCamera()
-rawCapture = PiRGBArray(camera)
 camera.resolution = (2592, 1944)
 # camera.framerate = 10
 
@@ -60,10 +59,10 @@ if __name__ == '__main__':
 
             # grab capture from camera
             rawCapture = PiRGBArray(camera)
-            time.sleep(0.1)
+            time.sleep(0.05)
 
             camera.capture(rawCapture, format="bgr")
-            frame = rawCapture.array
+            frame = cv2.cvtColor(rawCapture.array, cv2.COLOR_BGR2RGB) 
            
             
             # viewfinder mode
@@ -72,7 +71,7 @@ if __name__ == '__main__':
             cv2.imshow("Capturing", frame)
             # dispaly it for 1 ms
             cv2.waitKey(10)
-            
+
             img_held_f = False
         elif config.camera_mode == config.EDITMODE:
             if img_held_f == False:
