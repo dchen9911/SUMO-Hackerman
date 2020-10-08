@@ -24,7 +24,7 @@ BUTTON = 31
 
 OUTPUT = 33
 
-GPIO.setmode(GPIO.BOARD)
+# GPIO.setmode(GPIO.BOARD)
 
 GPIO.setup(TOGGLE, GPIO.IN)
 GPIO.setup(BUTTON, GPIO.IN)
