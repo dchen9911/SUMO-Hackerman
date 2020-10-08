@@ -101,7 +101,7 @@ if __name__ == '__main__':
             cv2.waitKey(1)
 
         # can only do roi in the edit mode        
-        if config.camera_mode == config.EDITMODE:
+        if config.camera_mode == config.EDITMODE and img is not None:
             if config.cropping is True:
                 print("Doing the cropping")
                 config.clickCoord, validROI = checkROI(original, config.clickCoord)
