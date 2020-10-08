@@ -89,7 +89,12 @@ def camera_cb(channel):
     print("CAMERA: Rising edge detected")
     
     config.camera_mode = not config.camera_mode
-
+    if (config.camera_mode == config.VIEWFINDERMODE):
+        print("Just switched to viewfinder mode")
+    elif (config.camera_mode == config.EDITMODE):
+        print("Just switched to edit mode")
+    else:
+        print("WE screwd up switching modes")
     print(GPIO.input(channel))
 
 # Mode callback
