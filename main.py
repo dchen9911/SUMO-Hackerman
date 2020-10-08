@@ -7,6 +7,16 @@ from cv_modules.zoom import zoom
 from cv_modules.roi import click_and_crop_cb, checkROI, crop
 import config
 
+from picamera.array import PiRGBArray
+from picamera import PiCamera
+
+camera = PiCamera()
+rawCapture = PiRGBArray(camera)
+camera.resolution = (2592, 1944)
+# camera.framerate = 10
+rawCapture = PiRGBArray(camera)
+
+
 
 def update_image(img):
     # CHANGE FUNCTION TO DNAIELS
@@ -48,10 +58,12 @@ if __name__ == '__main__':
             config.level_contrast = 0
             config.level_brightness = 0
 
-            check, frame = webcam.read()
+            # grab capture from camera
+            camera.capture(rawCapture, format="bgr")
+            frame = rawCapture.array
            
             # dispaly it for 1 ms
-            cv2.waitKey(1)
+            cv2.waitKey(50)
             # viewfinder mode
             # print(check) #prints true as long as the webcam is running
             # print(frame) #prints matrix values of each framecd 
