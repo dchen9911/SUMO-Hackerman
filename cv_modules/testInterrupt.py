@@ -56,8 +56,16 @@ def enable_int():
     GPIO.add_event_detect(BUTTON, GPIO.BOTH, callback=button_cb, bouncetime=200)
 
 def disable_int():
-    GPIO.remove_event_detect(TOGGLE)
-    GPIO.remove_event_detect(BUTTON)
+    GPIO.remove_event_detect(BUTCAMERA)
+    GPIO.remove_event_detect(BUTMODE)
+    GPIO.remove_event_detect(BUTDPDOWN)
+    GPIO.remove_event_detect(BUTDPLEFT)
+    GPIO.remove_event_detect(BUTDPRIGHT)
+    GPIO.remove_event_detect(BUTDPUP)
+    GPIO.remove_event_detect(BUTTOGGLE)
+
+
+
 
 # Camera callback
 def camera_cb(channel):
@@ -127,17 +135,18 @@ def button_cb(channel):
             
 
             
+if __name__ == "__main__":
     
-input("Press Enter when ready \n")
+    input("Press Enter when ready \n")
 
-enable_int()
+    enable_int()
 
-count = 0
-while(True):
-    if pan_left:
-        count = count + 1
-        time.sleep(0.2)
-        
-    #else:
-        #print(count)
+    count = 0
+    while(True):
+        if pan_left:
+            count = count + 1
+            time.sleep(0.2)
+            
+        #else:
+            #print(count)
 

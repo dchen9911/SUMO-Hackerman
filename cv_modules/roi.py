@@ -102,24 +102,26 @@ def checkROI(img, clickCoord):
 
     return clickCoord, validROI
 
-
-cv2.setMouseCallback("img", click_and_crop_cb)
-
+if __name__ == "__main__":
 
 
-while True:
-    
-    cv2.imshow('img', img)
-    cv2.waitKey(3)
-    #cv2.destroyAllWindows() 
-    if cropping is True:
-        clickCoord, validROI = checkROI(img, clickCoord)
-        if validROI == 1:
-            img = original_img
-        elif validROI == 2:
-            print("INTO VALID ROI")
-            img, img_cropped = crop(img, clickCoord)
-        cropping = False
-        clickCoord = []
+    cv2.setMouseCallback("img", click_and_crop_cb)
+
+
+
+    while True:
+        
+        cv2.imshow('img', img)
+        cv2.waitKey(3)
+        #cv2.destroyAllWindows() 
+        if cropping is True:
+            clickCoord, validROI = checkROI(img, clickCoord)
+            if validROI == 1:
+                img = original_img
+            elif validROI == 2:
+                print("INTO VALID ROI")
+                img, img_cropped = crop(img, clickCoord)
+            cropping = False
+            clickCoord = []
         
 
