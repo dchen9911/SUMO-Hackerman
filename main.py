@@ -44,7 +44,10 @@ if __name__ == '__main__':
             config.level_brightness = 0
 
             check, frame = webcam.read()
+           
             print("read a frame")
+            # dispaly it for 1 ms
+            cv2.waitKey(1)
             # viewfinder mode
             # print(check) #prints true as long as the webcam is running
             # print(frame) #prints matrix values of each framecd 
