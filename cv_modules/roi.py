@@ -12,18 +12,18 @@ import config
 # # cv2.waitKey(0)
 
 
-
-
 def click_and_crop_cb(event, x, y, flags, params):
     if config.camera_mode != config.EDITMODE:
         return
-    print("IN")
+    
 
     if event == cv2.EVENT_LBUTTONDOWN:
+        print("IN")
         config.clickCoord = [[x,y],]
         config.cropping = False
 
     elif event == cv2.EVENT_LBUTTONUP:
+        print("IN")
         config.clickCoord.append( [x,y] )
         config.cropping = True
 
