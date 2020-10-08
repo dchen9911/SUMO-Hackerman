@@ -2,9 +2,9 @@ import cv2
 import numpy as np
 import argparse
 
-img = cv2.imread("./cv_modules/1.jpg")
-original_img = img
-cv2.imshow("Original", img)
+# img = cv2.imread("./cv_modules/1.jpg")
+# original_img = img
+# cv2.imshow("Original", img)
 # cv2.imshow('img', img)
 # cv2.waitKey(0)
 
