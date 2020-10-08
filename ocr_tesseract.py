@@ -5,9 +5,13 @@ import matplotlib.pyplot as plt
 import pytesseract
 from scipy.ndimage import interpolation as inter
 
+<<<<<<< HEAD
 import shutil
 import os
 import glob
+=======
+pytesseract.pytesseract.tesseract_cmd = r'C:\\Program Files\\Tesseract-OCR\\tesseract.exe'
+>>>>>>> ee1defd88f0cea3c5b0b294feadca1bd7785f98a
 
 # img contains the image data
 # coords_str is a string of 8 comma separated coordinates, 4 * (x,y) coordinates)
