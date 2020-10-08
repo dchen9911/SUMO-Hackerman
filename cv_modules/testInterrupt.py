@@ -8,8 +8,8 @@ import time
 import config
 
 #  NEED TO CHANGE PINS
-BUTCAMERA = 1
-BUTMODE = 2
+BUTCAMERA = 2
+BUTMODE = 3
 BUTLED1 = 3
 BUTLED2 = 4
 BUTDPUP = 17

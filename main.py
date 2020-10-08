@@ -1,11 +1,11 @@
-from eval import TextLocator
+# TODO: UNCOMMENT
+# from eval import TextLocator
 import cv_modules.testInterrupt as ti
 # import cv_modules.roi as roi
 import contrast 
 import cv2
 from cv_modules.testInterrupt import ZOOM_MODE, BRIGHTNESS_MODE, CONTRAST_MODE
 import config
-s
 # from eval import TextLocator
 
 # img2 = textlocator.findtext(img)
@@ -24,9 +24,8 @@ if __name__ == '__main__':
     ti.setup_GPIO()
 
     ti.enable_int()
-    # new_locator = TextLocator()
-
     # TODO: uncomment
+    # new_locator = TextLocator()    
     # webcam = cv2.VideoCapture(0) 
     img_held_f = False
     img = None          # process
