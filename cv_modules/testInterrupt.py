@@ -170,9 +170,6 @@ def dpleft_cb(channel):
 def dpright_cb(channel):
     print("DPAD Right: Rising edge detected")
     print(GPIO.input(channel))
-
-
-
     if config.camera_mode == config.EDITMODE:
         if config.mode_flag == PAN_MODE:
             config.level_horz += 10
@@ -185,7 +182,7 @@ def dpright_cb(channel):
                 config.process_img = True
                 config.img_fast_f = False
     elif config.camera_mode == config.INTERPRETMODE:
-        print
+        print("going to interpret mode")
         config.cycle += 1
         # trigger next next
         pass

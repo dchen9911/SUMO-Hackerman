@@ -90,6 +90,7 @@ if __name__ == '__main__':
             elif config.cycle < config.cycle_prev:                
                 # img = getPrev(img.copy())
                 print(config.cycle, config.cycle_prev)
+                config.cycle_prev = config.cycle
 
             # pass
 
