@@ -98,7 +98,8 @@ def checkROI(img, clickCoord):
                 validROI = 2;
             #img, cropped =  crop(img, clickCoord)
             #print(  len(e)  )
-
+    else:
+        print("invalid roi")
     return clickCoord, validROI
 
 if __name__ == "__main__":

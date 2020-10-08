@@ -25,7 +25,7 @@ if __name__ == '__main__':
     
     ti.setup_GPIO()
     ti.enable_int()
-    
+
     cv2.setMouseCallback("Capturing", click_and_crop_cb)
 
     new_locator = TextLocator() 
@@ -104,7 +104,7 @@ if __name__ == '__main__':
         if config.camera_mode == config.EDITMODE:
             if config.cropping is True:
                 print("Doing the cropping")
-                config.clickCoord, validROI = checkROI(original, config, clickCoord)
+                config.clickCoord, validROI = checkROI(original, config.clickCoord)
                 if validROI == 1:
                     img = original.copy()
                 elif validROI == 2:
