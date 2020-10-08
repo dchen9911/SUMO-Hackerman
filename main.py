@@ -71,6 +71,10 @@ if __name__ == '__main__':
                 print('level_zoom: ' +str( config.level_zoom))
                 config.image_edited = False
                 pass
+
+        elif config.camera_mode == config.INTERPRETMODE:
+            # 
+
         
         if config.process_img:
             # TODO: UNCOMMENT
@@ -78,6 +82,7 @@ if __name__ == '__main__':
             # cv2.imshow("Capturing", new_img)
             print("Image being processed")
             config.process_img = False
+            config.camera_mode = config.INTERPRETMODE
             
 
        

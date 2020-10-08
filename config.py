@@ -2,6 +2,7 @@ from cv_modules.testInterrupt import ZOOM_MODE, BRIGHTNESS_MODE, CONTRAST_MODE
 
 VIEWFINDERMODE = 0
 EDITMODE = 1
+INTERPRETMODE = 2
 
 camera_mode = VIEWFINDERMODE
 
