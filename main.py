@@ -26,7 +26,7 @@ if __name__ == '__main__':
     ti.enable_int()
     # TODO: uncomment
     # new_locator = TextLocator()    
-    # webcam = cv2.VideoCapture(0) 
+    webcam = cv2.VideoCapture(0) 
     img_held_f = False
     config.img_fast_f = False
     img = None          # process
@@ -43,12 +43,12 @@ if __name__ == '__main__':
             config.level_brightness = 0
 
             # TODO: uncomment
-            # check, frame = webcam.read()
+            check, frame = webcam.read()
 
             # viewfinder mode
             # print(check) #prints true as long as the webcam is running
             # print(frame) #prints matrix values of each framecd 
-            # cv2.imshow("Capturing", frame)
+            cv2.imshow("Capturing", frame)
             img_held_f = False
        
         elif config.camera_mode == config.EDITMODE:
@@ -56,8 +56,8 @@ if __name__ == '__main__':
                 # TODO: uncomment
                 # check, frame = webcam.read()
 
-                # img = frame
-                # original = frame.copy()
+                img = frame
+                original = frame.copy()
                 print("holding image")
 
                 img_held_f = True
