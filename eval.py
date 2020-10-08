@@ -134,6 +134,9 @@ class TextLocator:
 
         self.ocr_tool = TextRecogniser()
 
+        self.cropped_rects = None
+        self.img_strings = None
+
     # quickly locates areas in an image where there could be text
     # expects raw image in bgr and outputs raw image in bgr
     def fastLocateText(self, im, min_length=800):
@@ -183,9 +186,9 @@ class TextLocator:
             alpha = 0.5
             cv2.addWeighted(overlay, alpha, im, 1 - alpha, 0, im)
 
-            im = cv2.cvtColor(im, cv2.COLOR_BGR2RGB) 
-            plt.imshow(im)
-            plt.show()
+            # im = cv2.cvtColor(im, cv2.COLOR_BGR2RGB) 
+            # plt.imshow(im)
+            # plt.show()
 
         # im = cv2.cvtColor(im, cv2.COLOR_BGR2RGB) 
        
@@ -235,11 +238,61 @@ class TextLocator:
         # cv2.waitKey(0)
         # plt.imshow(im)
         # plt.show()
-        return self.ocr_tool.recogniseText(im_orig, im[:, :, ::-1], coords_strs)
+        ocr_res = self.ocr_tool.recogniseText(im_orig, im[:, :, ::-1].copy(), coords_strs)
+        print(len(ocr_res))
+        im_to_disp, self.cropped_rects, self.img_strings = ocr_res 
+        self.curr_ind = -1
+        return im_to_disp
 
+    # returns image of the next word
+    def get_next_word(self):
+        # means there is no text being detected
+        if self.cropped_rects is None or not self.img_strings:
+            return generate_displayed_img("Error")
+        self.curr_ind += 1 
+        self.curr_ind %= len(self.cropped_rects)
+        i = self.curr_ind
+        return self.generate_displayed_img(self.img_strings[i], self.cropped_rects[i])
 
+    def get_prev_word(self):
+        if self.cropped_rects is None or not self.img_strings:
+            return generate_displayed_img("Error")
+        self.curr_ind -= 1 % len(self.cropped_rects)
+        self.curr_ind %= len(self.cropped_rects)
+        i = self.curr_ind
+        return self.generate_displayed_img(self.img_strings[i], self.cropped_rects[i])
+    
+    @staticmethod
+    def generate_displayed_img(text, crop=None):
+        if crop is not None:
+            new_im = 255 * np.ones(shape=[720, 1280, 3], dtype=np.uint8)
 
+            im_h, im_w, _ = crop.shape
 
+            # if the image is too wide, then scale based off width factor
+            if im_w/im_h > 32/9:
+                ratio = float(im_w)/1280
+            else:
+                ratio = float(im_h)/360
+
+            resize_h = int(im_h/ ratio)
+            resize_w = int(im_w / ratio)
+            crop = cv2.resize(crop, (int(resize_w), int(resize_h)))
+
+            im_h, im_w, _ = crop.shape
+            # print(im_h, im_w)
+            x1 = int((1280 - im_w)/2)
+            x2 = x1 + im_w
+            y1 = int((360 - im_h)/2)
+            y2 = y1 + im_h
+            # print(x1, x2, y1, y2)
+            new_im[y1:y2,x1:x2,:] = crop[0:im_h,0:im_w,:]     
+        if len(text) > 7:
+            fontsize=7
+        else:
+            fontsize = 10
+        cv2.putText(new_im, text, (10, 650), cv2.FONT_HERSHEY_SIMPLEX, fontsize,  (0, 0, 0), 15)
+        return new_im
 
 def main(argv=None):
     import os
@@ -311,8 +364,54 @@ def main(argv=None):
                     cv2.imwrite(img_path, im[:, :, ::-1])
 
 if __name__ == '__main__':
+
+    cv2.namedWindow('image', cv2.WINDOW_NORMAL)
+    cv2.resizeWindow('image', 1280, 720)
     textloc = TextLocator()
-    im = cv2.imread('test_images/IMG_20201008_113706.jpg')
-    textloc.fastLocateText(im)
-    im = cv2.imread('test_images/IMG_20201008_113718.jpg')
-    textloc.fastLocateText(im)
+    im = cv2.imread('test_images/IMG_20201008_113806.jpg')
+    im = textloc.findText(im)
+    cv2.imshow('image', im)
+    cv2.waitKey(0)
+
+    cv2.imshow('image',textloc.get_next_word())
+    cv2.waitKey(0)
+
+    cv2.imshow('image',textloc.get_next_word())
+    cv2.waitKey(0)
+
+    cv2.imshow('image',textloc.get_next_word())
+    cv2.waitKey(0)
+
+
+    cv2.imshow('image',textloc.get_next_word())
+    cv2.waitKey(0)
+
+    cv2.imshow('image',textloc.get_next_word())
+    cv2.waitKey(0)
+
+    cv2.imshow('image',textloc.get_next_word())
+    cv2.waitKey(0)
+
+    cv2.imshow('image',textloc.get_next_word())
+    cv2.waitKey(0)
+
+    cv2.imshow('image',textloc.get_next_word())
+    cv2.waitKey(0)
+
+    cv2.imshow('image',textloc.get_next_word())
+    cv2.waitKey(0)
+    
+    cv2.imshow('image',textloc.get_prev_word())
+    cv2.waitKey(0)
+
+    cv2.imshow('image',textloc.get_prev_word())
+    cv2.waitKey(0)
+    
+    cv2.imshow('image',textloc.get_prev_word())
+    cv2.waitKey(0)
+    
+    cv2.imshow('image',textloc.get_prev_word())
+    cv2.waitKey(0)
+
+    # im = cv2.imread('test_images/IMG_20201008_113718.jpg')
+    # textloc.fastLocateText(im)

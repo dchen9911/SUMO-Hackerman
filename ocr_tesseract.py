@@ -116,27 +116,33 @@ class TextRecogniser:
         #configuration setting to convert image to string.  
         self.configuration = ("-l eng --oem 1 --psm 8")
 
+    # returns the im to disp, list of crops (in bgr mode), list of strings
     def recogniseText(self, orig_im, im_to_disp, coords_strs):
-
+        cropped_rects = []
+        img_strings = []
         for line in coords_strs:
             coords_str = line.strip()
 
             coords, flat_rect = crop_rotated_rect(orig_im, coords_str)
             flat_rect = process_for_OCR(flat_rect, debug=False)
-
+            cropped_rects.append(flat_rect.copy())
             # convert from bgr to rgb
             flat_rect = cv2.cvtColor(flat_rect, cv2.COLOR_BGR2RGB)
 
             # This will recognize the text from flattened bounding box
             text = pytesseract.image_to_string(flat_rect, config=self.configuration)
-            print("{}".format(text))        
+            
+
+            print("{}".format(text.strip()))        
 
             # only add text if the character is english
             text_to_add = "".join([x if ord(x) < 128 else "" for x in text]).strip()
+            img_strings.append(text_to_add)
             # print(coords)
             cv2.putText(im_to_disp, text_to_add, (coords[0][0][0], coords[0][0][1] - 10),
                 cv2.FONT_HERSHEY_SIMPLEX, 2,(0,0, 255), 5)
-        return im_to_disp
+        
+        return im_to_disp, cropped_rects, img_strings
         # im_to_disp = cv2.cvtColor(im_to_disp, cv2.COLOR_BGR2RGB)
         # plt.imshow(im_to_disp)
         # plt.show()
