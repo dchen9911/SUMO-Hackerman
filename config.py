@@ -17,6 +17,8 @@ image_edited = False
 process_img = False
 img_fast_f = False
 
+cycle = 0
+cycle_prev = 0
 
 mode_flag = ZOOM_MODE      # change the mode
 prev_mode = ZOOM_MODE
