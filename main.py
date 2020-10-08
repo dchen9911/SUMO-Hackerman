@@ -5,6 +5,7 @@ import cv_modules.testInterrupt as ti
 from contrast import changeContrastBrightness 
 import cv2
 from cv_modules.testInterrupt import ZOOM_MODE, BRIGHTNESS_MODE, CONTRAST_MODE
+from cv_modules.zoom import zoom
 import config
 # from eval import TextLocator
 
@@ -13,7 +14,7 @@ import config
 
 def update_image(img):
     # CHANGE FUNCTION TO DNAIELS
-    # img = zoom(config.level_horz, config.level_vert, config.level_zoom, img.copy())
+    img = zoom(config.level_horz, config.level_vert, config.level_zoom, img))
 
     img_to_disp = changeContrastBrightness(img, config.level_contrast, config.level_brightness)
 
