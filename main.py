@@ -34,6 +34,13 @@ if __name__ == '__main__':
     while True:
 
         if config.camera_mode == config.VIEWFINDERMODE:
+
+            config.level_vert = 0
+            config.level_horz = 0
+            config.level_zoom = 0
+            config.level_contrast = 0
+            config.level_brightness = 0
+
             # TODO: uncomment
             # check, frame = webcam.read()
 

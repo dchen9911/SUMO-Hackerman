@@ -158,6 +158,7 @@ def dpleft_cb(channel):
 
         else:
             config.camera_mode = config.VIEWFINDERMODE
+            print("switch back to viewfinder")
         
 
 # DP Up callback
