@@ -80,7 +80,15 @@ if __name__ == '__main__':
 
         elif config.camera_mode == config.INTERPRETMODE:
             print('switch to interpret mode')
-            # img = getNext(img.)
+
+            if config.cycle > config.cycle_prev:
+                # img = getNext(img.copy())
+                print(config.cycle, config.cycle_prev)
+                config.cycle_prev = config.cycle
+            elif config.cycle < config.cycle_prev:                
+                # img = getPrev(img.copy())
+                print(config.cycle, config.cycle_prev)
+
             # pass
 
         

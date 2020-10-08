@@ -160,7 +160,9 @@ def dpleft_cb(channel):
             config.camera_mode = config.VIEWFINDERMODE
             print("switch back to viewfinder")
     elif config.camera_mode == config.INTERPRETMODE:
-        # trigger next prev
+        print
+        config.cycle -= 1
+        # trigger next next
         pass
         
 
@@ -183,6 +185,8 @@ def dpright_cb(channel):
                 config.process_img = True
                 config.img_fast_f = False
     elif config.camera_mode == config.INTERPRETMODE:
+        print
+        config.cycle += 1
         # trigger next next
         pass
 
