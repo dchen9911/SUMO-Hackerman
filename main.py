@@ -20,7 +20,7 @@ def update_image(img):
     return img
 
 if __name__ == '__main__':
-    tf.setup_GPIO()
+    ti.setup_GPIO()
 
     ti.enable_int()
     # new_locator = TextLocator()
