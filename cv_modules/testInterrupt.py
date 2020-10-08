@@ -102,13 +102,13 @@ def mode_cb(channel):
     print("MODE: Rising edge detected")
     
     if config.mode_flag == ZOOM_MODE:
-        config.mode_flag == CONTRAST_MODE
+        config.mode_flag = CONTRAST_MODE
         print("Switched to contrast mode")
     elif config.mode_flag == CONTRAST_MODE:
-        config.mode_flag== BRIGHTNESS_MODE
+        config.mode_flag = BRIGHTNESS_MODE
         print("Switched to brightness mode")
     elif config.mode_flag == BRIGHTNESS_MODE:
-        config.mode_flag == ZOOM_MODE
+        config.mode_flag = ZOOM_MODE
         print("Switched to zoom mode")
 
     print(GPIO.input(channel))
