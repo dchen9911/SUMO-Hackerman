@@ -67,7 +67,7 @@ if __name__ == '__main__':
                 # update alles
                 # img = update_image(original)
                 
-                if config.img_fast_f == False:
+                if config.img_fast_f == True:
                     print("show fast img")
                     # fast_img = new_locator.fastLocateText(img.copy())
                 print('brigtness: ' + str(config.level_brightness)) 
