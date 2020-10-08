@@ -21,7 +21,7 @@ def update_image(img):
 if __name__ == '__main__':
     cv2.namedWindow('Capturing', cv2.WINDOW_NORMAL)
     # cv2.resizeWindow('Capturing', 800, 570)
-     cv2.resizeWindow('Capturing', 500, 370)
+    cv2.resizeWindow('Capturing', 500, 370)
     
     ti.setup_GPIO()
 
