@@ -3,7 +3,7 @@ east_icdar2015_resnet_v1_50_rbox/
 tmp/
 .vscode/
 test_images/
-
+*.sh
 # Byte-compiled / optimized / DLL files
 __pycache__/
 *.py[cod]
