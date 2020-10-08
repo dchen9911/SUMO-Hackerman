@@ -14,7 +14,7 @@ import config
 
 def update_image(img):
     # CHANGE FUNCTION TO DNAIELS
-    img = zoom(config.level_horz, config.level_vert, config.level_zoom, img))
+    img = zoom(config.level_horz, config.level_vert, config.level_zoom, img)
 
     img_to_disp = changeContrastBrightness(img, config.level_contrast, config.level_brightness)
 
