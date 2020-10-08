@@ -1,6 +1,10 @@
 import RPi.GPIO as GPIO
 import time
 
+ZOOM_MODE = 1
+CONTRAST_MODE = 2
+BRIGHTNESS_MODE = 3
+
 #  NEED TO CHANGE PINS
 BUTCAMERA = 1
 BUTMODE = 2
@@ -78,14 +82,13 @@ def camera_cb(channel):
 def mode_cb(channel):
     print("MODE: Rising edge detected")
     global mode_flag
-    if mode_flag == 0:
-        mode_flag == 1
-    if mode_flag == 1:
-        mode_flag == 2
-    if mode_flag == 2:
-        mode_flag== 3
-    if mode_flag == 3:
-        mode_flag == 0
+
+    if mode_flag == ZOOM_MODE:
+        mode_flag == CONTRAST_MODE
+    if mode_flag == CONTRAST_MODE:
+        mode_flag== BRIGHTNESS_MODE
+    if mode_flag == BRIGHTNESS_MODE:
+        mode_flag == ZOOM_MODE
     print(GPIO.input(channel))
 
 # DP Up callback

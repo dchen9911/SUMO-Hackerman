@@ -1,33 +1,39 @@
-# import ocr_tesseract as ocr
-# import cv_modules.testInterrupt as ti
+from eval import TextLocator
+import cv_modules.testInterrupt as ti
 # import cv_modules.roi as roi
 import contrast 
 import cv2
+from cv_modules.testInterrupt import ZOOM_MODE, BRIGHTNESS_MODE, CONTRAST_MODE
 
 # from eval import TextLocator
 
 # img2 = textlocator.findtext(img)
 
-global pan_left
 
-global camera_flag
-global mode_flag
-global dpup_flag
-global dpdown_flag
-global dpleft_flag
-global dpright_flag
-global toggle_flag
+
+
+camera_flag = 0      # triggers the camera to freeze/
+mode_flag = ZOOM_MODE      # change the mode
+dpup_flag = 0       # dpad up 
+dpdown_flag = 0     # dpad down
+dpleft_flag = 0     # dpad left
+dpright_flag = 0    # dpad right
+toggle_flag = 0     # toggles between using the dpad as a pan or as part of mode
+
+
 
 if __name__ == '__main__':
 
-    level_zoom = 0
-    level_contrast = 0
-    level_brightness = 0
-
     ti.enable_int()
+    new_locator = TextLocator()
 
     cam = cv2.VideoCapture(0) 
     while True:
+
+        level_zoom = 0
+        level_contrast = 0
+        level_brightness = 0
+
         # viewfinder mode
         check, frame = webcam.read()
         # print(check) #prints true as long as the webcam is running
@@ -37,28 +43,33 @@ if __name__ == '__main__':
         if camera_flag:
 
             img = frame
-            original = frame
+            original = frame.copy()
 
-            while True:
-
-
+            camera_flag = 0
+            overlayed_img = new_locator.fastLocateText(img.copy())
+            cv2.imshow("Capturing", overlayed_img)
+            #  editing mode
+            while not camera_flag:
+                
                 # toggle dpad as movement or characteristic
                 if toggle_flag == 1:
 
                     # when on zoom, dpad
-                    if mode_flag == 1:
+                    if mode_flag == ZOOM_MODE:
                         # DPAD
                         if dpup_flag == 1:
-                            
+                            # zoom in
 
                         if dpdown_flag == 1:
-                            
+                            # zoom out
+
                         if dpleft_flag == 1:
 
                         if dpright_flag == 1:
-                        # dpad as pan
+                            new_locator.()
+                            dpright_flag = 0
 
-                    else if mode_flag == 2:
+                    else if mode_flag == CONTRAST_MODE:
                         # contrast
 
                         img_name = '1'
@@ -93,7 +104,7 @@ if __name__ == '__main__':
                         if dpleft_flag == 1:
                             # back to viewfinder
                     
-                    else if mode_flag == 3:
+                    else if mode_flag == BRIGHTNESS_MODE:
                     # brightness
                         # content
                         if dpup_flag == 1:
@@ -121,8 +132,9 @@ if __name__ == '__main__':
                     toggle_flag = 0
 
                 else if toggle_flag == 0:
-                    # dpad as mode
+                    # dpad as pan
 
+            # reset flag after leaving editing mode
             camera_flag = 0
                 
 
