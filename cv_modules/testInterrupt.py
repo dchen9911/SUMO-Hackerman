@@ -16,14 +16,14 @@ BUTDPLEFT = 26
 BUTDPRIGHT = 19
 BUTTOGGLE = 16
 
-BUTLED1 = 5
-BUTLED2 = 4
+BUTLED1 = 20
+BUTLED2 = 21
 
-# Inputs
-TOGGLE = 29
-BUTTON = 31
+# # Inputs
+# TOGGLE = 29
+# BUTTON = 31
 
-OUTPUT = 33
+# OUTPUT = 33
 
 # GPIO.setmode(GPIO.BOARD)
 
@@ -47,6 +47,10 @@ def setup_GPIO():
 
     GPIO.setup(BUTCAMERA, GPIO.IN, pull_up_down=GPIO.PUD_DOWN)
     GPIO.setup(BUTMODE, GPIO.IN, pull_up_down=GPIO.PUD_DOWN)
+
+    GPIO.setup(BUTLED1, GPIO.OUT)
+    GPIO.setup(BUTLED2, GPIO.OUT)
+
 
   
 def enable_int():
@@ -102,12 +106,19 @@ def mode_cb(channel):
     if config.mode_flag == ZOOM_MODE:
         config.mode_flag = CONTRAST_MODE
         print("Switched to contrast mode")
+        GPIO.output(BUTLED1, True)
+        GPIO.output(BUTLED2, False) 
+
     elif config.mode_flag == CONTRAST_MODE:
         config.mode_flag = BRIGHTNESS_MODE
         print("Switched to brightness mode")
+        GPIO.output(BUTLED1, False)
+        GPIO.output(BUTLED2, True) 
     elif config.mode_flag == BRIGHTNESS_MODE:
         config.mode_flag = ZOOM_MODE
         print("Switched to zoom mode")
+        GPIO.output(BUTLED1, False)
+        GPIO.output(BUTLED2, False) 
 
     print(GPIO.input(channel))
 
