@@ -82,7 +82,7 @@ if __name__ == '__main__':
                 pass
 
         elif config.camera_mode == config.INTERPRETMODE:
-            # print('switch to interpret mode')
+            print('switch to interpret mode')
 
             if config.cycle > config.cycle_prev:
                 # img = getNext(img.copy())
@@ -110,9 +110,8 @@ if __name__ == '__main__':
         #         cv2.waitKey(1)
         
         if config.process_img:
-            # TODO: UNCOMMENT
-            # new_img = new_locator.findtext(img)
-            # cv2.imshow("Capturing", new_img)
+            new_img = new_locator.findtext(img)
+            cv2.imshow("Capturing", new_img)
             print("Image being processed")
             config.process_img = False
             config.camera_mode = config.INTERPRETMODE
