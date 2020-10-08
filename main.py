@@ -12,12 +12,10 @@ from picamera.array import PiRGBArray
 from picamera import PiCamera
 
 camera = PiCamera()
-camera.resolution = (640, 480)
-
-camera2 = PiCamera()
-camera2.resolution= (640, 480)
-
+camera.resolution = (1920, 1080)
 # camera.framerate = 10
+
+
 
 def update_image(img):
     # CHANGE FUNCTION TO DNAIELS
@@ -59,10 +57,14 @@ if __name__ == '__main__':
             config.level_contrast = 0
             config.level_brightness = 0
 
-            rawCapture = PiRGBArray(camera2)
-            time.sleep(0.01)
-            camera2.capture(rawCapture, format="bgr")
-            frame = cv2.cvtColor(rawCapture.array, cv2.COLOR_BGR2RGB)             
+            # grab capture from camera
+            rawCapture = PiRGBArray(camera)
+            time.sleep(0.03)
+
+            camera.capture(rawCapture, format="bgr")
+            frame = cv2.cvtColor(rawCapture.array, cv2.COLOR_BGR2RGB) 
+           
+            
             # viewfinder mode
             # print(check) #prints true as long as the webcam is running
             # print(frame) #prints matrix values of each framecd 
@@ -74,17 +76,11 @@ if __name__ == '__main__':
         elif config.camera_mode == config.EDITMODE:
             if img_held_f == False:
 
-                rawCapture = PiRGBArray(camera)
-                time.sleep(0.1)
-
-                camera.capture(rawCapture, format="bgr")
-                frame = cv2.cvtColor(rawCapture.array, cv2.COLOR_BGR2RGB) 
                 img = frame
                 original = frame.copy()
                 print("holding image")
                 print(frame.shape)
                 img_held_f = True
-
             
             if config.image_edited:
                 # update all things
