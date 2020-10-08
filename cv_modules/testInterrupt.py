@@ -152,7 +152,7 @@ def dpright_cb(channel):
     if config.mode_flag == PAN_MODE:
         config.level_horz += 10
         config.image_edited = True
-    else:
+    elif config.camera_mode == config.EDITMODE:
         config.process_img = True
     print(GPIO.input(channel))
 
