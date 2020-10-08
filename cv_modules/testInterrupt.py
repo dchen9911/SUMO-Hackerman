@@ -159,14 +159,17 @@ def dpright_cb(channel):
 # Toggle callback
 def toggle_cb(channel):
     print("TOGGLE: Rising edge detected")
-
+    print(GPIO.input(channel))  
+    
+    if config.camera_mode == config.VIEWFINDERMODE:
+        return
     if config.mode_flag != PAN_MODE:
         config.prev_mode = config.mode_flag
         config.mode_flag = PAN_MODE
     else:
         config.mode_flag = config.prev_mode
 
-    print(GPIO.input(channel))         
+           
 
             
 if __name__ == "__main__":
