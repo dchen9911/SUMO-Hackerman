@@ -51,7 +51,7 @@ if __name__ == '__main__':
     while True:
 
         if config.camera_mode == config.VIEWFINDERMODE:
-
+            fast_img_disped = False
             config.level_vert = 0
             config.level_horz = 0
             config.level_zoom = 0
@@ -88,12 +88,14 @@ if __name__ == '__main__':
                 print("Updating the image)")
                 if config.img_fast_f == True and fast_img_disped == False:
                     print("show fast img")
-                    img = new_locator.fastLocateText(original.copy())
-                    img = update_image(img)
+                    fast_img = new_locator.fastLocateText(original.copy())
+                    img = update_image(fast_img)
                     fast_img_disped = True
+                elif config.img_fast_f == True:
+                    img = update_image(fast_img.copy())
                 else:
                     img = update_image(original.copy())
-                
+
                 
                 print('brigtness: ' + str(config.level_brightness)) 
                 print('contrast: ' + str(config.level_contrast))
