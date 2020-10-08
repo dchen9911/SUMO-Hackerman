@@ -26,10 +26,10 @@ OUTPUT = 33
 
 # GPIO.setmode(GPIO.BOARD)
 
-GPIO.setup(TOGGLE, GPIO.IN)
-GPIO.setup(BUTTON, GPIO.IN)
+# GPIO.setup(TOGGLE, GPIO.IN)
+# GPIO.setup(BUTTON, GPIO.IN)
 
-GPIO.setup(OUTPUT, GPIO.OUT)
+# GPIO.setup(OUTPUT, GPIO.OUT)
 
 pan_left = 0
 pan_right = 0
