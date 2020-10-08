@@ -183,7 +183,7 @@ class TextLocator:
                 cv2.fillPoly(overlay, [box.astype(np.int32).reshape((-1, 1, 2))], (255, 255, 0), 8)
             
             im = im[:, :, ::-1] # convert to bgr so we can add with overlay
-            alpha = 0.5
+            alpha = 0.3
             cv2.addWeighted(overlay, alpha, im, 1 - alpha, 0, im)
 
             # im = cv2.cvtColor(im, cv2.COLOR_BGR2RGB) 

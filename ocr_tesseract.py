@@ -124,8 +124,9 @@ class TextRecogniser:
             coords_str = line.strip()
 
             coords, flat_rect = crop_rotated_rect(orig_im, coords_str)
-            flat_rect = process_for_OCR(flat_rect, debug=False)
             cropped_rects.append(flat_rect.copy())
+            flat_rect = process_for_OCR(flat_rect, debug=False)
+            
             # convert from bgr to rgb
             flat_rect = cv2.cvtColor(flat_rect, cv2.COLOR_BGR2RGB)
 
