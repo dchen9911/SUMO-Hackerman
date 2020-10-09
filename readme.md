@@ -9,6 +9,7 @@ This is a fork of the tensorflow implementation of [EAST: An Efficient and Accur
 
 [Demo of hardware](https://youtu.be/PdQYSMOIo6g)
 
+[Demo of integrated product p1](https://youtu.be/6c-7cj8y0qk)
 
 [Demo of integrated product p2](https://youtu.be/BNEBVM68nQg)
 
